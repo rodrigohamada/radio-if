@@ -1,0 +1,180 @@
+<!-- ============================ -->
+<!-- 🖼️ SLIDER PRINCIPAL (DINÂMICO) -->
+<!-- Espera: slides = [{ imagem_url, badge, titulo, descricao, link_url, link_label }] -->
+<!-- ============================ -->
+<section class="slider">
+  <% if (slides && slides.length) { %>
+    <% slides.forEach((s, i)=> { %>
+      <div class="slide <%= i === 0 ? 'active' : '' %>" style="background-image: url('<%= s.imagem_url %>');"
+        aria-label="<%= s.titulo || '' %>">
+
+        <% if (s.badge) { %>
+          <span class="badge">
+            <%= s.badge %>
+          </span>
+          <% } %>
+
+            <% if (s.titulo) { %>
+              <h2>
+                <%= s.titulo %>
+              </h2>
+              <% } %>
+                <% if (s.descricao) { %>
+                  <p>
+                    <%= s.descricao %>
+                  </p>
+                  <% } %>
+
+                    <% if (s.link_url) { %>
+                      <p style="margin-top:10px;">
+                        <a href="<%= s.link_url %>" class="btn">
+                          <%= s.link_label || 'Saiba mais' %>
+                        </a>
+                      </p>
+                      <% } %>
+      </div>
+      <% }) %>
+        <% } else { %>
+          <!-- 🔸 Fallback se não houver slides no banco -->
+          <div class="slide active" style="background-image: url('/images/slide1.png');">
+            <span class="badge">Destaque</span>
+            <h2>Ao Vivo Agora</h2>
+            <p>Ouça o melhor da nossa programação!</p>
+          </div>
+
+          <div class="slide" style="background-image: url('/images/slide2.png');">
+            <span class="badge">IFSP</span>
+            <h2>A rádio do IF Campinas!</h2>
+            <p>Em sintonia com os estudantes</p>
+          </div>
+
+          <div class="slide" style="background-image: url('/images/slide3.jpg');">
+            <span class="badge">Música</span>
+            <h2>A sua música está aqui!</h2>
+            <p>Peça já a sua música!</p>
+          </div>
+          <% } %>
+</section>
+
+<!-- ============================ -->
+<!-- SEÇÕES PRINCIPAIS DA HOME -->
+<!-- ============================ -->
+<div class="grid cols-3 home-panels">
+
+  <!-- 🎙️ AGORA NO AR -->
+  <div class="card current-show">
+    <h3 class="section-title">🎙️ Agora no ar</h3>
+
+    <% if (currentProgram) { %>
+      <div class="show-info">
+        <div class="show-name">
+          <%= currentProgram.name %>
+        </div>
+        <div class="show-host">com <%= currentProgram.host %>
+        </div>
+        <div class="show-time">⏰ <%= currentProgram.start_time %> – <%= currentProgram.end_time %>
+        </div>
+      </div>
+
+      <div class="show-visual">
+        <div class="sound-bars">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      </div>
+      <% } else { %>
+        <p>Nenhum programa ao vivo no momento.</p>
+        <% } %>
+  </div>
+
+<!-- 📅 PROGRAMAS DE HOJE -->
+<div class="card program-card">
+  <div class="card-header">
+    <i class="fas fa-calendar-day"></i>
+    <h3>Programas de hoje</h3>
+  </div>
+
+  <% if (todayPrograms && todayPrograms.length) { %>
+    <div class="program-grid">
+      <% todayPrograms.forEach(p => { %>
+        <div class="program-item">
+          <div class="program-time">
+            <i class="far fa-clock"></i>
+            <span><%= p.start_time %> – <%= p.end_time %></span>
+          </div>
+
+          <div class="program-info">
+            <h4><%= p.name %></h4>
+            <p><i class="fas fa-user"></i> <%= p.host %></p>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <p class="empty">Nenhum programa encontrado para hoje.</p>
+  <% } %>
+</div>
+
+<!-- FontAwesome para ícones -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+
+  <!-- 📰 ÚLTIMAS NOTÍCIAS -->
+  <div class="card">
+    <h3 class="section-title">📰 Últimas notícias</h3>
+    <ul class="news-list">
+      <% if (recentNews && recentNews.length) { %>
+        <% recentNews.forEach(n=> { %>
+          <li>
+            <strong>
+              <%= n.titulo %>
+            </strong><br>
+            <span class="preview">
+              <%= n.conteudo.substring(0, 80) %>...
+            </span><br>
+            <a href="/noticias#<%= n.id %>" class="news-link">Ver notícia</a>
+          </li>
+          <% }) %>
+            <% } else { %>
+              <li>Nenhuma notícia disponível no momento.</li>
+              <% } %>
+    </ul>
+    <div class="see-all">
+      <a href="/noticias" class="btn-news">Ver todas as notícias</a>
+    </div>
+  </div>
+</div>
+
+<!-- ============================ -->
+<!-- GALERIA FULL-WIDTH -->
+<!-- ============================ -->
+<section class="gallery-section full-bleed">
+  <div class="gallery-wrap">
+    <h2>Galeria</h2>
+    <div class="gallery-grid">
+      <div class="card"><img src="/images/galeria1.jpg" alt="Galeria 1"></div>
+      <div class="card"><img src="/images/slide1.png" alt="Galeria 2"></div>
+      <div class="card"><img src="/images/galeria3.jpg" alt="Galeria 3"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ -->
+<!-- SCRIPT DO SLIDER (auto-rotate) -->
+<!-- ============================ -->
+<script>
+  (function () {
+    const slides = document.querySelectorAll('.slider .slide');
+    if (!slides.length) return;
+
+    let i = 0;
+    setInterval(() => {
+      slides[i].classList.remove('active');
+      i = (i + 1) % slides.length;
+      slides[i].classList.add('active');
+    }, 7000);
+  })();
+</script>

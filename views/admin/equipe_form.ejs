@@ -1,0 +1,86 @@
+<h1 style="text-align:center; margin-bottom:24px;">
+  <%= member.id ? '✏️ Editar Integrante' : '➕ Novo Integrante' %>
+</h1>
+
+<div class="card" style="max-width:600px; margin:0 auto; padding:24px;">
+  <form method="POST"
+        action="<%= member.id ? '/admin/equipe/editar/' + member.id : '/admin/equipe/novo' %>"
+        style="display:flex; flex-direction:column; gap:16px;">
+
+    <!-- Nome -->
+    <div>
+      <label for="nome"><strong>Nome:</strong></label><br>
+      <input type="text" id="nome" name="nome"
+             value="<%= member.nome || '' %>"
+             placeholder="Ex: Nome do integrante"
+             required
+             style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px;">
+    </div>
+
+    <!-- Função / Cargo -->
+    <div>
+      <label for="funcao"><strong>Cargo/Função:</strong></label><br>
+      <input type="text" id="funcao" name="funcao"
+             value="<%= member.funcao || '' %>"
+             placeholder="Ex: Locutor / Desenvolvedor"
+             style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px;">
+    </div>
+
+    <!-- Foto URL -->
+    <div>
+      <label for="foto_url"><strong>URL da Foto:</strong></label><br>
+      <input type="text" id="foto_url" name="foto_url"
+             value="<%= member.foto_url || '' %>"
+             placeholder="https://exemplo.com/foto.jpg"
+             style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px;">
+    </div>
+
+    <!-- Instagram -->
+    <div>
+      <label for="instagram"><strong>Instagram:</strong></label><br>
+      <input type="url" id="instagram" name="instagram"
+             value="<%= member.instagram || '' %>"
+             placeholder="https://instagram.com/usuario"
+             style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px;">
+    </div>
+
+    <!-- LinkedIn -->
+    <div>
+      <label for="linkedin"><strong>LinkedIn:</strong></label><br>
+      <input type="url" id="linkedin" name="linkedin"
+             value="<%= member.linkedin || '' %>"
+             placeholder="https://linkedin.com/in/usuario"
+             style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px;">
+    </div>
+
+    <!-- Botões -->
+    <div style="display:flex; justify-content:center; gap:10px; margin-top:20px;">
+      <button type="submit"
+              class="btn"
+              style="background:var(--primary); color:#fff; padding:10px 20px; border:none; border-radius:8px; cursor:pointer; font-weight:600;">
+        💾 Salvar
+      </button>
+
+      <a href="/admin/equipe"
+         class="btn-outline"
+         style="padding:10px 20px; border:2px solid var(--primary); border-radius:8px; text-decoration:none; color:var(--primary); font-weight:600;">
+        ← Voltar
+      </a>
+    </div>
+  </form>
+
+  <% if (typeof error !== 'undefined' && error) { %>
+    <p style="color:red; text-align:center; margin-top:16px;">
+      <%= error %>
+    </p>
+  <% } %>
+</div>
+
+<!-- Visualização opcional da foto -->
+<% if (member && member.foto_url) { %>
+  <div style="text-align:center; margin-top:20px;">
+    <img src="<%= member.foto_url %>"
+         alt="Foto de <%= member.nome %>"
+         style="width:140px; height:140px; object-fit:cover; border-radius:50%; border:3px solid var(--primary); box-shadow:0 0 10px rgba(0,0,0,.15);">
+  </div>
+<% } %>

@@ -1,0 +1,37 @@
+<h1 style="text-align:center; margin-bottom:24px;">📻 Gerenciar Programação</h1>
+
+<div class="text-center" style="margin-bottom:20px;">
+  <a href="/admin/programas/novo" class="btn" style="background:var(--primary); color:#fff; padding:10px 20px; border-radius:6px; text-decoration:none;">➕ Novo Programa</a>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Dia</th>
+      <th>Início</th>
+      <th>Fim</th>
+      <th>Programa</th>
+      <th>Locutor</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if (programs && programs.length) { %>
+      <% programs.forEach(p => { %>
+        <tr>
+          <td><%= p.dia_semana %></td>
+          <td><%= p.hora_inicio %></td>
+          <td><%= p.hora_fim %></td>
+          <td><%= p.nome %></td>
+          <td><%= p.locutor %></td>
+          <td>
+            <a href="/admin/programas/editar/<%= p.id %>">✏️ Editar</a> |
+            <a href="/admin/programas/excluir/<%= p.id %>" onclick="return confirm('Deseja realmente excluir este programa?')">🗑️ Excluir</a>
+          </td>
+        </tr>
+      <% }) %>
+    <% } else { %>
+      <tr><td colspan="6" style="text-align:center;">Nenhum programa cadastrado.</td></tr>
+    <% } %>
+  </tbody>
+</table>

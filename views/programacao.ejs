@@ -1,0 +1,30 @@
+<h1 class="page-title">Programação</h1>
+
+<% const order = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado']; %>
+
+<% order.forEach(dia => { if (grouped[dia]) { %>
+  <h2 style="margin: 20px 0 10px; font-size: 24px; font-weight: 700; color: var(--primary);">
+    <%= dia %>
+  </h2>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Início</th>
+        <th>Fim</th>
+        <th>Programa</th>
+        <th>Locutor</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% grouped[dia].forEach(p => { %>
+        <tr>
+          <td data-label="Início"><%= p.start_time %></td>
+          <td data-label="Fim"><%= p.end_time %></td>
+          <td data-label="Programa"><%= p.name %></td>
+          <td data-label="Locutor"><%= p.host %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+<% } }) %>

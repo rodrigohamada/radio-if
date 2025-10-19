@@ -1,0 +1,42 @@
+<h1 style="text-align:center; margin-bottom:24px;">
+  <%= program.id ? '✏️ Editar Programa' : '➕ Novo Programa' %>
+</h1>
+
+<form method="POST"
+      action="<%= program.id ? '/admin/programas/editar/' + program.id : '/admin/programas/novo' %>"
+      style="max-width:600px; margin:0 auto; display:flex; flex-direction:column; gap:12px;">
+
+  <label>Nome do Programa:</label>
+  <input type="text" name="nome" value="<%= program.nome || '' %>" required>
+
+  <label>Descrição:</label>
+  <textarea name="descricao" rows="3"><%= program.descricao || '' %></textarea>
+
+  <label>Locutor:</label>
+  <input type="text" name="locutor" value="<%= program.locutor || '' %>">
+
+  <label>Dia da Semana:</label>
+  <select name="dia_semana" required>
+    <% ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'].forEach(dia => { %>
+      <option value="<%= dia %>" <%= program.dia_semana === dia ? 'selected' : '' %>><%= dia %></option>
+    <% }) %>
+  </select>
+
+  <label>Hora de Início:</label>
+  <input type="time" name="hora_inicio" value="<%= program.hora_inicio || '' %>" required>
+
+  <label>Hora de Fim:</label>
+  <input type="time" name="hora_fim" value="<%= program.hora_fim || '' %>" required>
+
+  <button type="submit" style="background:var(--primary); color:#fff; border:none; border-radius:6px; padding:10px; cursor:pointer;">
+    💾 Salvar
+  </button>
+</form>
+
+<div style="text-align:center; margin-top:16px;">
+  <a href="/admin/programas" style="color:var(--primary); text-decoration:none;">← Voltar</a>
+</div>
+
+<% if (error) { %>
+  <p style="color:red; text-align:center; margin-top:10px;"><%= error %></p>
+<% } %>

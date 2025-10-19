@@ -1,0 +1,41 @@
+<h1 style="text-align:center; margin-bottom:24px;">
+  <%= slide.id ? '✏️ Editar Slide' : '➕ Novo Slide' %>
+</h1>
+
+<div class="card" style="max-width:600px; margin:0 auto; padding:24px;">
+  <form method="POST"
+        action="<%= slide.id ? '/admin/slides/editar/' + slide.id : '/admin/slides/novo' %>"
+        style="display:flex; flex-direction:column; gap:14px;">
+
+    <label><strong>Título:</strong></label>
+    <input type="text" name="titulo" value="<%= slide.titulo || '' %>" required>
+
+    <label><strong>Descrição:</strong></label>
+    <input type="text" name="descricao" value="<%= slide.descricao || '' %>">
+
+    <label><strong>Badge:</strong></label>
+    <input type="text" name="badge" value="<%= slide.badge || '' %>" placeholder="Ex: Destaque, IFSP, Música...">
+
+    <label><strong>URL da Imagem:</strong></label>
+    <input type="text" name="imagem_url" value="<%= slide.imagem_url || '' %>" required>
+
+    <label><strong>Ordem:</strong></label>
+    <input type="number" name="ordem" min="1" value="<%= slide.ordem || 1 %>">
+
+    <div style="display:flex; justify-content:center; gap:10px; margin-top:20px;">
+      <button type="submit" class="btn">💾 Salvar</button>
+      <a href="/admin/slides" class="btn-outline">← Voltar</a>
+    </div>
+  </form>
+
+  <% if (typeof error !== 'undefined' && error) { %>
+    <p style="color:red; text-align:center; margin-top:16px;"><%= error %></p>
+  <% } %>
+</div>
+
+<% if (slide.imagem_url) { %>
+  <div style="text-align:center; margin-top:20px;">
+    <img src="<%= slide.imagem_url %>" alt="<%= slide.titulo %>"
+         style="width:300px; border-radius:12px; box-shadow:0 0 10px rgba(0,0,0,.2)">
+  </div>
+<% } %>

@@ -1,0 +1,26 @@
+<h1 class="page-title">Notícias</h1>
+
+<div class="grid-noticias">
+  <% if (items && items.length) { %>
+    <% items.forEach(n => { %>
+      <article class="card-noticia" id="<%= n.id %>">
+        <% if (n.imagem_url) { %>
+          <div class="img-container">
+            <img src="<%= n.imagem_url %>" alt="<%= n.titulo %>">
+          </div>
+        <% } %>
+
+        <div class="noticia-content">
+          <h3><%= n.titulo %></h3>
+          <p class="texto"><%= n.conteudo %></p>
+          <p class="meta">
+            Publicado em <%= new Date(n.data_criacao).toLocaleDateString('pt-BR') %>
+            <% if (n.autor_nome) { %> • por <%= n.autor_nome %><% } %>
+          </p>
+        </div>
+      </article>
+    <% }) %>
+  <% } else { %>
+    <p class="sem-noticias">Nenhuma notícia disponível.</p>
+  <% } %>
+</div>

@@ -1,0 +1,7 @@
+<h1>Erro</h1>
+<p>
+    <%= message %>
+</p>
+<% if (error && error.stack) { %>
+    <pre style="white-space:pre-wrap"><%= error.stack %></pre>
+    <% } %>

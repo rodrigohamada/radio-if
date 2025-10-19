@@ -1,0 +1,72 @@
+<h1 style="text-align:center; margin-bottom:24px;">📬 Mensagens de Contato</h1>
+
+<div class="card" style="margin-bottom:20px; padding:16px; text-align:center;">
+  <p>Bem-vindo, <strong><%= user.nome %></strong>!</p>
+  <p style="color:var(--muted)">Abaixo estão as mensagens enviadas pelos usuários.</p>
+</div>
+
+<table id="contatos-table" style="width:100%; border-collapse:collapse; max-width:960px; margin:auto;">
+  <thead>
+    <tr style="background:#f5f5f5;">
+      <th style="padding:8px; border:1px solid #ddd;">#</th>
+      <th style="padding:8px; border:1px solid #ddd;">Usuário</th>
+      <th style="padding:8px; border:1px solid #ddd;">E-mail</th>
+      <th style="padding:8px; border:1px solid #ddd;">Assunto</th>
+      <th style="padding:8px; border:1px solid #ddd;">Mensagem</th>
+      <th style="padding:8px; border:1px solid #ddd;">Data</th>
+    </tr>
+  </thead>
+  <tbody id="contatos-body">
+    <% if (contatos && contatos.length) { %>
+      <% contatos.forEach((c, i) => { %>
+        <tr>
+          <td><%= i + 1 %></td>
+          <td><%= c.nome %></td>
+          <td><%= c.email %></td>
+          <td><%= c.assunto %></td>
+          <td style="max-width:300px; white-space:pre-wrap;"><%= c.mensagem %></td>
+          <td><%= new Date(c.data_envio).toLocaleString('pt-BR') %></td>
+        </tr>
+      <% }) %>
+    <% } else { %>
+      <tr><td colspan="6" style="text-align:center; padding:12px;">Nenhuma mensagem encontrada.</td></tr>
+    <% } %>
+  </tbody>
+</table>
+
+<div style="text-align:center; margin-top:30px;">
+  <a href="/admin/" style="color:var(--primary); font-weight:600; text-decoration:none;">← Voltar ao painel</a>
+</div>
+
+<script>
+async function atualizarContatos() {
+  try {
+    const res = await fetch('/admin/api/contatos');
+    if (!res.ok) throw new Error('Erro ao buscar contatos');
+    const dados = await res.json();
+    const tbody = document.getElementById('contatos-body');
+
+    if (!dados.length) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:12px;">Nenhuma mensagem encontrada.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = dados.map((c, i) => `
+      <tr>
+        <td>${i + 1}</td>
+        <td>${c.nome}</td>
+        <td>${c.email}</td>
+        <td>${c.assunto}</td>
+        <td style="max-width:300px; white-space:pre-wrap;">${c.mensagem}</td>
+        <td>${new Date(c.data_envio).toLocaleString('pt-BR')}</td>
+      </tr>
+    `).join('');
+  } catch (err) {
+    console.error('Falha ao atualizar contatos:', err);
+  }
+}
+
+// Atualiza a cada 10 segundos
+setInterval(atualizarContatos, 10000);
+atualizarContatos();
+</script>

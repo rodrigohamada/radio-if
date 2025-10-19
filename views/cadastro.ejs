@@ -1,0 +1,226 @@
+<style>
+  /* ======== TOOLTIP DO ASTERISCO ======== */
+  .required-asterisk {
+    color: red;
+    cursor: help;
+    position: relative;
+  }
+
+  .required-asterisk::after {
+    content: 'Este campo é obrigatório o preenchimento.';
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.85);
+    color: #fff;
+    padding: 6px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 9999;
+  }
+
+  .required-asterisk:hover::after {
+    opacity: 1;
+    visibility: visible;
+  }
+</style>
+
+<div class="register-page" style="display:flex; justify-content:center; align-items:center; flex:1; min-height:calc(100vh - 180px);">
+  <div style="width:100%; max-width:480px;">
+    <h1 style="text-align:center; margin-bottom:20px;">Cadastro</h1>
+
+    <% if (error) { %>
+      <div class="card" style="border-left:4px solid #e11; padding:10px; margin-bottom:16px; text-align:center;">
+        <p style="margin:0;"><%= error %></p>
+      </div>
+    <% } %>
+
+    <form id="registerForm" method="post" action="/auth/register" class="card" style="display:flex; flex-direction:column; gap:16px; padding:24px;">
+      <!-- Dados pessoais -->
+      <div>
+        <label for="name" style="font-weight:600; font-size:14px;">
+          Nome completo <span class="required-asterisk">*</span>
+        </label>
+        <input class="input" id="name" name="name" placeholder="Seu nome" required
+          style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; margin-top:4px;" />
+      </div>
+
+      <div>
+        <label for="email" style="font-weight:600; font-size:14px;">
+          E-mail <span class="required-asterisk">*</span>
+        </label>
+        <input class="input" id="email" name="email" type="email" placeholder="Seu e-mail" required
+          style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; margin-top:4px;" />
+        <small id="emailError" style="color:red; display:none;">Digite um e-mail válido.</small>
+      </div>
+
+      <div style="position:relative;">
+        <label for="password" style="font-weight:600; font-size:14px;">
+          Senha <span class="required-asterisk">*</span>
+        </label>
+        <input class="input" id="password" name="password" type="password" placeholder="Crie uma senha" required minlength="6"
+          style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; margin-top:4px;" />
+        <span id="togglePassword" style="position:absolute; right:10px; top:38px; cursor:pointer; color:#666;">👁️</span>
+      </div>
+
+      <div>
+        <label for="confirmPassword" style="font-weight:600; font-size:14px;">
+          Confirmar Senha <span class="required-asterisk">*</span>
+        </label>
+        <input class="input" id="confirmPassword" name="confirmPassword" type="password" placeholder="Repita a senha" required minlength="6"
+          style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; margin-top:4px;" />
+        <small id="passwordError" style="color:red; display:none;">As senhas não coincidem.</small>
+      </div>
+
+      <!-- Telefones -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+        <div>
+          <label for="celular" style="font-weight:600; font-size:14px;">
+            Celular <span class="required-asterisk">*</span>
+          </label>
+          <input class="input" id="celular" name="celular" placeholder="(19) 91234-5678" required
+            style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; margin-top:4px;" />
+        </div>
+        <div>
+          <label for="telefone" style="font-weight:600; font-size:14px;">
+            Telefone (fixo)
+          </label>
+          <input class="input" id="telefone" name="telefone" placeholder="(19) 3456-7890"
+            style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; margin-top:4px;" />
+        </div>
+      </div>
+
+      <!-- Endereço -->
+      <hr style="border:0; border-top:1px solid #eee; margin:10px 0;">
+      <h3 style="font-size:16px; color:var(--primary); text-align:center;">Endereço</h3>
+
+      <div>
+        <label for="cep" style="font-weight:600; font-size:14px;">
+          CEP <span class="required-asterisk">*</span>
+        </label>
+        <input class="input" id="cep" name="cep" placeholder="Digite seu CEP" required
+          style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; margin-top:4px;" />
+      </div>
+
+      <div>
+        <label for="logradouro" style="font-weight:600; font-size:14px;">
+          Logradouro <span class="required-asterisk">*</span>
+        </label>
+        <input class="input" id="logradouro" name="logradouro" placeholder="Rua / Avenida" required
+          style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; margin-top:4px;" />
+      </div>
+
+      <div style="display:grid; grid-template-columns:2fr 1fr; gap:8px;">
+        <div>
+          <label for="bairro" style="font-weight:600; font-size:14px;">
+            Bairro <span class="required-asterisk">*</span>
+          </label>
+          <input class="input" id="bairro" name="bairro" placeholder="Bairro" required
+            style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; margin-top:4px;" />
+        </div>
+        <div>
+          <label for="numero" style="font-weight:600; font-size:14px;">
+            Número <span class="required-asterisk">*</span>
+          </label>
+          <input class="input" id="numero" name="numero" placeholder="Nº" required
+            style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; margin-top:4px;" />
+        </div>
+      </div>
+
+      <div>
+        <label for="cidade" style="font-weight:600; font-size:14px;">
+          Cidade <span class="required-asterisk">*</span>
+        </label>
+        <input class="input" id="cidade" name="cidade" placeholder="Cidade" required
+          style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; margin-top:4px;" />
+      </div>
+
+      <div>
+        <label for="uf" style="font-weight:600; font-size:14px;">
+          Estado <span class="required-asterisk">*</span>
+        </label>
+        <input class="input" id="uf" name="uf" placeholder="UF" maxlength="2" required
+          style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; margin-top:4px; text-transform:uppercase;" />
+      </div>
+
+      <button class="btn" type="submit"
+        style="width:100%; padding:12px; font-size:16px; background:var(--primary); color:#fff; border:none; border-radius:6px; cursor:pointer;">
+        Cadastrar
+      </button>
+
+      <div class="login-link" style="text-align:center; margin-top:8px;">
+        <p style="margin:0; color:var(--muted); font-size:14px;">
+          Já possui uma conta?
+          <a href="/auth/login" style="color:var(--primary); font-weight:600; text-decoration:none;">Entrar</a>
+        </p>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // API dos Correios (ViaCEP)
+  document.getElementById('cep').addEventListener('blur', async () => {
+    const cep = document.getElementById('cep').value.replace(/\D/g, '');
+    if (cep.length !== 8) return;
+
+    try {
+      const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+      const data = await res.json();
+      if (data.erro) {
+        alert('CEP não encontrado.');
+        return;
+      }
+      document.getElementById('logradouro').value = data.logradouro || '';
+      document.getElementById('bairro').value = data.bairro || '';
+      document.getElementById('cidade').value = data.localidade || '';
+      document.getElementById('uf').value = data.uf || '';
+    } catch (err) {
+      alert('Erro ao consultar o CEP. Tente novamente.');
+      console.error(err);
+    }
+  });
+
+  // Mostrar/ocultar senha
+  const togglePassword = document.getElementById('togglePassword');
+  const passwordInput = document.getElementById('password');
+  togglePassword.addEventListener('click', () => {
+    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput.setAttribute('type', type);
+    togglePassword.textContent = type === 'password' ? '👁️' : '🙈';
+  });
+
+  // Validação de e-mail
+  const emailInput = document.getElementById('email');
+  const emailError = document.getElementById('emailError');
+  emailInput.addEventListener('blur', () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    emailError.style.display = emailRegex.test(emailInput.value) ? 'none' : 'block';
+  });
+
+  // Validação de confirmação de senha
+  const confirmPassword = document.getElementById('confirmPassword');
+  const passwordError = document.getElementById('passwordError');
+  const form = document.getElementById('registerForm');
+
+  form.addEventListener('submit', (e) => {
+    if (passwordInput.value !== confirmPassword.value) {
+      e.preventDefault();
+      passwordError.style.display = 'block';
+      confirmPassword.focus();
+    } else {
+      passwordError.style.display = 'none';
+    }
+
+    if (emailError.style.display === 'block') {
+      e.preventDefault();
+      emailInput.focus();
+    }
+  });
+</script>

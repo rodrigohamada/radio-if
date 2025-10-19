@@ -1,0 +1,35 @@
+<h1 style="text-align:center; margin-bottom:24px;">📰 Gerenciar Notícias</h1>
+
+<div style="text-align:center; margin-bottom:20px;">
+  <a href="/admin/noticias/nova" style="background:#228B22; color:white; padding:10px 18px; border-radius:5px; text-decoration:none;">➕ Nova Notícia</a>
+</div>
+
+<% if (noticias && noticias.length) { %>
+  <table style="width:100%; border-collapse:collapse; max-width:960px; margin:auto;">
+    <thead>
+      <tr style="background:#f5f5f5;">
+        <th style="padding:8px; border:1px solid #ddd;">Título</th>
+        <th style="padding:8px; border:1px solid #ddd;">Data</th>
+        <th style="padding:8px; border:1px solid #ddd;">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% noticias.forEach(n => { %>
+        <tr>
+          <td style="padding:8px; border:1px solid #ddd;"><%= n.titulo %></td>
+          <td style="padding:8px; border:1px solid #ddd;"><%= new Date(n.data_criacao).toLocaleString('pt-BR') %></td>
+          <td style="padding:8px; border:1px solid #ddd; text-align:center;">
+            <a href="/admin/noticias/editar/<%= n.id %>" style="color:#007bff; text-decoration:none; margin-right:10px;">✏️ Editar</a>
+            <a href="/admin/noticias/excluir/<%= n.id %>" style="color:red; text-decoration:none;">🗑️ Excluir</a>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+<% } else { %>
+  <p style="text-align:center;">Nenhuma notícia cadastrada.</p>
+<% } %>
+
+<div style="text-align:center; margin-top:30px;">
+  <a href="/admin" style="color:var(--primary); font-weight:600; text-decoration:none;">← Voltar ao painel</a>
+</div>

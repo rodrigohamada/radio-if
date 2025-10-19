@@ -1,0 +1,135 @@
+<h1 style="text-align:center; margin-bottom:20px;">Contato</h1>
+
+<!-- GRID DE INFORMAÇÕES -->
+<div class="grid" style="display:grid; grid-template-columns:1fr; gap:16px; margin-bottom:16px; max-width:960px; margin:auto;">
+  <div class="card" style="display:flex; flex-direction:column; gap:12px; align-items:flex-start; padding:20px;">
+    <h3 style="margin-bottom:6px;">Fale com a Rádio IF</h3>
+    <p style="color:var(--muted);">
+      Use o formulário abaixo para enviar pedidos de músicas, registrar reclamações ou falar com a equipe.
+    </p>
+    <p style="color:var(--muted); margin-top:6px;">Respostas chegam no seu e-mail cadastrado.</p>
+  </div>
+
+  <div class="card" style="padding:20px;">
+    <h3 style="margin-bottom:6px;">Outros canais</h3>
+    <p><strong>E-mail:</strong> atendimento@radio-if.edu.br</p>
+    <p><strong>WhatsApp:</strong> (19) 99999-0000</p>
+    <p><strong>Endereço:</strong> IFSP – Campinas</p>
+  </div>
+</div>
+
+<!-- MENSAGENS -->
+<% if (success) { %>
+  <div class="card" style="border-left:4px solid var(--primary); text-align:center; max-width:600px; margin:0 auto;">
+    Mensagem enviada com sucesso! ✅
+  </div>
+<% } %>
+
+<% if (errors && errors.length) { %>
+  <div class="card" style="border-left:4px solid #e11; max-width:600px; margin:0 auto;">
+    <strong>Erros:</strong>
+    <ul style="margin-top:8px;">
+      <% errors.forEach(e => { %><li><%= e %></li><% }) %>
+    </ul>
+  </div>
+<% } %>
+
+<!-- FORMULÁRIO -->
+<form method="post" action="/contato" class="card"
+      style="margin:20px auto; max-width:600px; display:flex; flex-direction:column; gap:16px; padding:24px; border-radius:10px;">
+  
+  <!-- Identificação -->
+  <div style="display:grid; gap:10px; grid-template-columns:1fr 1fr;">
+    <div>
+      <label for="name" style="font-weight:600; font-size:14px;">Nome</label>
+      <input class="input" id="name" name="name"
+             value="<%= (form && form.name) || (user && user.name) || '' %>"
+             placeholder="Digite seu nome"
+             style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; margin-top:4px;" />
+    </div>
+    <div>
+      <label for="email" style="font-weight:600; font-size:14px;">E-mail</label>
+      <input class="input" id="email" name="email"
+             value="<%= (form && form.email) || (user && user.email) || '' %>"
+             placeholder="Digite seu e-mail"
+             style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; margin-top:4px;" />
+    </div>
+  </div>
+
+  <!-- Assunto -->
+  <div style="display:grid; gap:10px; grid-template-columns:1fr 1fr;">
+    <div>
+      <label for="subject" style="font-weight:600; font-size:14px;">Assunto</label>
+      <select class="input" id="subject" name="subject" required
+              style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; margin-top:4px;">
+        <option value="">Selecione…</option>
+        <option value="Pedidos de músicas" <%= (form && form.subject==='Pedidos de músicas')?'selected':'' %>>Pedidos de músicas</option>
+        <option value="Reclamações" <%= (form && form.subject==='Reclamações')?'selected':'' %>>Reclamações</option>
+        <option value="Outros" <%= (form && form.subject==='Outros')?'selected':'' %>>Outros</option>
+      </select>
+    </div>
+
+    <div id="subject-other-wrap" style="display:none;">
+      <label for="subject_other" style="font-weight:600; font-size:14px;">Outro assunto</label>
+      <input class="input" id="subject_other" name="subject_other" placeholder="Digite o assunto"
+             value="<%= (form && form.subject_other) || '' %>"
+             style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; margin-top:4px;" />
+    </div>
+  </div>
+
+  <!-- Mensagem -->
+  <div>
+    <label for="message" style="font-weight:600; font-size:14px;">Mensagem</label>
+    <textarea class="input" id="message" name="message"
+              placeholder="Escreva sua mensagem…" rows="6" required
+              style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; margin-top:4px;"><%= (form && form.message) || '' %></textarea>
+  </div>
+
+  <div style="margin-top:12px; display:flex; flex-direction:column; gap:10px; align-items:center;">
+    <button class="btn" type="submit"
+            style="width:100%; padding:12px; font-size:16px; background:var(--primary); color:#fff; border:none; border-radius:6px; cursor:pointer;">
+      Enviar
+    </button>
+    <small style="color:var(--muted); text-align:center;">* Apenas usuários cadastrados podem enviar mensagens.</small>
+  </div>
+</form>
+
+<!-- SCRIPT -->
+<script>
+  (function () {
+    const sel = document.getElementById('subject');
+    const wrap = document.getElementById('subject-other-wrap');
+    const other = document.getElementById('subject_other');
+
+    function toggleOther() {
+      if (sel.value === 'Outros') {
+        wrap.style.display = '';
+        other.setAttribute('required', 'required');
+      } else {
+        wrap.style.display = 'none';
+        other.removeAttribute('required');
+        other.value = '';
+      }
+    }
+
+    sel.addEventListener('change', toggleOther);
+    toggleOther();
+  })();
+</script>
+
+<!-- ESTILO RESPONSIVO -->
+<style>
+  @media (max-width: 768px) {
+    form.card {
+      padding: 16px;
+    }
+
+    .grid {
+      grid-template-columns: 1fr !important;
+    }
+
+    input, select, textarea {
+      font-size: 16px;
+    }
+  }
+</style>

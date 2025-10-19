@@ -1,0 +1,22 @@
+<h1 style="text-align:center; margin-bottom:24px;">➕ Nova Notícia</h1>
+
+<form action="/admin/noticias/nova" method="POST" style="max-width:600px; margin:auto;">
+  <% if (error) { %>
+    <p style="color:red; text-align:center;"><%= error %></p>
+  <% } %>
+
+  <label>Título:</label>
+  <input type="text" name="titulo" required style="width:100%; margin-bottom:8px;">
+
+  <label>Conteúdo:</label>
+  <textarea name="conteudo" rows="6" required style="width:100%; margin-bottom:8px;"></textarea>
+
+  <label>URL da Imagem (opcional):</label>
+  <input type="text" name="imagem_url" style="width:100%; margin-bottom:8px;">
+
+  <button type="submit" style="background:#228B22; color:white; border:none; padding:10px 18px; border-radius:5px; cursor:pointer;">Salvar</button>
+</form>
+
+<div style="text-align:center; margin-top:20px;">
+  <a href="/admin/noticias" style="color:var(--primary); text-decoration:none;">← Voltar</a>
+</div>

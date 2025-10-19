@@ -1,0 +1,103 @@
+<h1 style="text-align:center; margin-bottom:24px;">👥 Gerenciar Equipe</h1>
+
+<div class="grid cols-2" style="gap:24px;">
+
+  <!-- ===================== -->
+  <!-- BLOCO 1: EQUIPE DO SITE -->
+  <!-- ===================== -->
+  <div class="card">
+    <h2>🎙️ Equipe exibida na página "Equipe"</h2>
+    <p style="color:var(--muted)">Estes são os integrantes visíveis no site.</p>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Função</th>
+          <th>Instagram</th>
+          <th>LinkedIn</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (members.length) { %>
+          <% members.forEach(m => { %>
+            <tr>
+              <td><%= m.nome %></td>
+              <td><%= m.funcao || '-' %></td>
+              <td>
+                <% if (m.instagram) { %>
+                  <a href="<%= m.instagram %>" target="_blank">🔗</a>
+                <% } else { %>-<% } %>
+              </td>
+              <td>
+                <% if (m.linkedin) { %>
+                  <a href="<%= m.linkedin %>" target="_blank">🔗</a>
+                <% } else { %>-<% } %>
+              </td>
+              <td>
+                <a href="/admin/equipe/editar/<%= m.id %>" class="btn-sm">✏️ Editar</a>
+                <a href="/admin/equipe/excluir/<%= m.id %>" class="btn-sm btn-danger" onclick="return confirm('Excluir integrante <%= m.nome %>?');">🗑️ Excluir</a>
+              </td>
+            </tr>
+          <% }) %>
+        <% } else { %>
+          <tr><td colspan="5" style="text-align:center;">Nenhum integrante cadastrado.</td></tr>
+        <% } %>
+      </tbody>
+    </table>
+
+    <div style="text-align:center; margin-top:10px;">
+      <a href="/admin/equipe/novo" class="btn">➕ Adicionar Integrante</a>
+    </div>
+  </div>
+
+  <!-- ===================== -->
+  <!-- BLOCO 2: USUÁRIOS CADASTRADOS -->
+  <!-- ===================== -->
+  <div class="card">
+    <h2>👤 Usuários cadastrados no sistema</h2>
+    <p style="color:var(--muted)">Gerencie permissões e contas de usuários registrados.</p>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Email</th>
+          <th>Administrador</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (users.length) { %>
+          <% users.forEach(u => { %>
+            <tr>
+              <td><%= u.nome %></td>
+              <td><%= u.email %></td>
+              <td>
+                <% if (u.administrador) { %>
+                  ✅ Sim
+                <% } else { %>
+                  ❌ Não
+                <% } %>
+              </td>
+              <td>
+                <% if (!u.administrador) { %>
+                  <a href="/admin/usuarios/admin/<%= u.id %>" class="btn-sm">⭐ Tornar Adm</a>
+                <% } %>
+                <a href="/admin/usuarios/excluir/<%= u.id %>" class="btn-sm btn-danger" onclick="return confirm('Excluir usuário <%= u.nome %>?');">🗑️ Excluir</a>
+              </td>
+            </tr>
+          <% }) %>
+        <% } else { %>
+          <tr><td colspan="4" style="text-align:center;">Nenhum usuário cadastrado.</td></tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div style="text-align:center; margin-top:30px;">
+  <a href="/admin" style="color:var(--primary); font-weight:600; text-decoration:none;">← Voltar ao painel</a>
+</div>
+

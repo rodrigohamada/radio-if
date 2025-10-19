@@ -1,0 +1,59 @@
+<div class="login-page" style="display:flex; justify-content:center; align-items:center; flex:1; min-height:calc(100vh - 180px);">
+  <div style="width:100%; max-width:420px;">
+    <h1 style="text-align:center; margin-bottom:20px;">Entrar</h1>
+
+    <% if (error) { %>
+      <div class="card" id="alert-box" style="border-left:4px solid var(--primary); margin-bottom:16px; text-align:center; padding:10px;">
+        <p style="margin:0; font-weight:500;"><%= error %></p>
+      </div>
+    <% } %>
+
+    <form method="post" action="/auth/login" class="card" style="display:flex; flex-direction:column; gap:16px; padding:24px;">
+      <div>
+        <label for="email" style="font-weight:600; font-size:14px;">E-mail</label>
+        <input class="input" id="email" name="email" type="email" placeholder="Seu e-mail" required
+          style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; margin-top:4px; font-size:15px;" />
+      </div>
+
+      <div>
+        <label for="password" style="font-weight:600; font-size:14px;">Senha</label>
+        <input class="input" id="password" name="password" type="password" placeholder="Sua senha" required minlength="6"
+          style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; margin-top:4px; font-size:15px;" />
+      </div>
+
+      <button class="btn" style="width:100%; padding:12px; font-size:16px; background:var(--primary); color:#fff; border:none; border-radius:6px; cursor:pointer;">
+        Entrar
+      </button>
+
+      <div class="register-link" style="text-align:center; margin-top:8px;">
+        <p style="margin:0; color:var(--muted); font-size:14px;">
+          Ainda não tem uma conta?
+          <a href="/auth/register" style="color:var(--primary); font-weight:600; text-decoration:none;">Cadastre-se</a>
+        </p>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Exibe alerta caso o usuário tenha vindo da página de contato
+  document.addEventListener("DOMContentLoaded", () => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("alert") === "login-required") {
+      const msg = "⚠️ Você precisa estar logado para enviar uma mensagem de contato. Faça login ou crie uma conta.";
+      const alertBox = document.getElementById("alert-box");
+      if (alertBox) {
+        alertBox.querySelector("p").textContent = msg;
+      } else {
+        const div = document.createElement("div");
+        div.className = "card";
+        div.style.borderLeft = "4px solid var(--primary)";
+        div.style.marginBottom = "16px";
+        div.style.textAlign = "center";
+        div.style.padding = "10px";
+        div.innerHTML = `<p style="margin:0; font-weight:500;">${msg}</p>`;
+        document.querySelector(".login-page > div").insertBefore(div, document.querySelector("h1").nextSibling);
+      }
+    }
+  });
+</script>

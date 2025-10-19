@@ -1,0 +1,83 @@
+<h1 style="text-align:center; margin-bottom:24px;">🎵 Pedidos de Músicas</h1>
+
+<div class="card" style="margin-bottom:20px; padding:16px; text-align:center;">
+  <p>Bem-vindo, <strong><%= user.nome %></strong>!</p>
+  <p style="color:var(--muted)">Aqui você pode visualizar os pedidos de músicas enviados pelos usuários.</p>
+</div>
+
+<table id="pedidos-table" style="width:100%; border-collapse:collapse; max-width:960px; margin:auto;">
+  <thead>
+    <tr style="background:#f5f5f5;">
+      <th style="padding:8px; border:1px solid #ddd;">#</th>
+      <th style="padding:8px; border:1px solid #ddd;">Usuário</th>
+      <th style="padding:8px; border:1px solid #ddd;">E-mail</th>
+      <th style="padding:8px; border:1px solid #ddd;">Assunto</th>
+      <th style="padding:8px; border:1px solid #ddd;">Mensagem</th>
+      <th style="padding:8px; border:1px solid #ddd;">Data</th>
+    </tr>
+  </thead>
+  <tbody id="pedidos-body">
+    <% if (pedidos && pedidos.length) { %>
+      <% pedidos.forEach((c, i) => { %>
+        <tr>
+          <td><%= i + 1 %></td>
+          <td><%= c.nome %></td>
+          <td><%= c.email %></td>
+          <td><%= c.assunto %></td>
+          <td style="max-width:300px; white-space:pre-wrap;"><%= c.mensagem %></td>
+          <td><%= new Date(c.data_envio).toLocaleString('pt-BR') %></td>
+        </tr>
+      <% }) %>
+    <% } else { %>
+      <tr><td colspan="6" style="text-align:center; padding:12px;">Nenhum pedido encontrado.</td></tr>
+    <% } %>
+  </tbody>
+</table>
+
+<div style="text-align:center; margin-top:30px;">
+  <a href="/admin/" style="color:var(--primary); font-weight:600; text-decoration:none;">← Voltar ao painel</a>
+</div>
+
+<script>
+async function atualizarPedidos() {
+  try {
+    const res = await fetch('/admin/api/pedidos');
+    if (!res.ok) throw new Error('Erro ao buscar pedidos');
+    const dados = await res.json();
+    const tbody = document.getElementById('pedidos-body');
+
+    if (!dados.length) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:12px;">Nenhum pedido encontrado.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = dados.map((c, i) => `
+      <tr>
+        <td>${i + 1}</td>
+        <td>${c.nome}</td>
+        <td>${c.email}</td>
+        <td>${c.assunto}</td>
+        <td style="max-width:300px; white-space:pre-wrap;">${c.mensagem}</td>
+        <td>${new Date(c.data_envio).toLocaleString('pt-BR')}</td>
+      </tr>
+    `).join('');
+  } catch (err) {
+    console.error('Falha ao atualizar pedidos:', err);
+  }
+}
+
+// Atualiza a cada 10 segundos
+setInterval(atualizarPedidos, 10000);
+atualizarPedidos();
+</script>
+
+<style>
+  @media (max-width: 768px) {
+    table {
+      font-size: 14px;
+    }
+    th, td {
+      padding: 6px;
+    }
+  }
+</style>
