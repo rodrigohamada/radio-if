@@ -1,0 +1,10 @@
+& "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysqldump.exe" `
+  --host=127.0.0.1 --port=3306 `
+  --user=root --password=12345 `
+  --databases radio_if `
+  --default-character-set=utf8mb4 `
+  --skip-tz-utc `
+  --no-tablespaces `
+  --set-gtid-purged=OFF `
+  --routines --events --triggers `
+  --result-file="C:\Users\rhamada\Desktop\radioif_backup.sql"
