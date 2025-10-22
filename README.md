@@ -4,22 +4,6 @@ Sistema web desenvolvido como projeto da disciplina **Desenvolvimento Web 2** do
 
 ---
 
-## 📋 Sumário
-
-- [Visão Geral](#visão-geral)
-- [Tecnologias Utilizadas](#tecnologias-utilizadas)
-- [Estrutura do Projeto](#estrutura-do-projeto)
-- [Configuração do Ambiente](#configuração-do-ambiente)
-- [Banco de Dados](#banco-de-dados)
-- [Execução do Projeto](#execução-do-projeto)
-- [Painel Administrativo](#painel-administrativo)
-- [Funcionalidades Principais](#funcionalidades-principais)
-- [Backup e Restauração do Banco](#backup-e-restauração-do-banco)
-- [Contribuição](#contribuição)
-- [Licença](#licença)
-
----
-
 ## 💡 Visão Geral
 
 O **Rádio IF** é uma aplicação web que tem como objetivo oferecer uma experiência de rádio online para alunos e professores. Desenvolvido em **Node.js + Express + EJS + MySQL**, o sistema possui páginas públicas e uma área administrativa protegida por autenticação.
@@ -126,4 +110,5 @@ O painel administrativo permite gerenciar:
 ## 📄 Licença
 
 Este projeto foi desenvolvido para fins educacionais como parte da disciplina de Desenvolvimento Web 2 do Instituto Federal de Campinas.
+
 
