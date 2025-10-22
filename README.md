@@ -4,6 +4,21 @@ Sistema web desenvolvido como projeto da disciplina **Desenvolvimento Web 2** do
 
 ---
 
+# Integrantes
+
+Felipe Manganelli Calocci - CP3018938
+Matheus da Silva Tosi - CP3019098
+PEedro Lopes - CP3019322
+Rodrigo Hamada - CP3018873
+
+---
+
+# Repositório
+
+https://github.com/rodrigohamada/radio-if
+
+---
+
 ## 💡 Visão Geral
 
 O **Rádio IF** é uma aplicação web que tem como objetivo oferecer uma experiência de rádio online para alunos e professores. Desenvolvido em **Node.js + Express + EJS + MySQL**, o sistema possui páginas públicas e uma área administrativa protegida por autenticação.
@@ -110,5 +125,6 @@ O painel administrativo permite gerenciar:
 ## 📄 Licença
 
 Este projeto foi desenvolvido para fins educacionais como parte da disciplina de Desenvolvimento Web 2 do Instituto Federal de Campinas.
+
 
 
