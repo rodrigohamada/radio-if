@@ -8,7 +8,7 @@ Sistema web desenvolvido como projeto da disciplina **Desenvolvimento Web 2** do
 
 Felipe Manganelli Calocci - CP3018938 | 
 Matheus da Silva Tosi - CP3019098 | 
-PEedro Lopes - CP3019322 | 
+Pedro Lopes - CP3019322 | 
 Rodrigo Hamada - CP3018873 | 
 
 ---
@@ -125,6 +125,7 @@ O painel administrativo permite gerenciar:
 ## 📄 Licença
 
 Este projeto foi desenvolvido para fins educacionais como parte da disciplina de Desenvolvimento Web 2 do Instituto Federal de Campinas.
+
 
 
 
