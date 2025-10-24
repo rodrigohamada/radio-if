@@ -1,52 +1,75 @@
 <!-- ============================ -->
 <!-- SLIDER PRINCIPAL (DINÂMICO) -->
 <!-- ============================ -->
-<section class="slider">
+<section class="slider neon-slider">
+  <!-- Efeito de ondas sonoras no topo -->
+  <div class="neon-wave"></div>
+
   <% if (slides && slides.length) { %>
     <% slides.forEach((s, i)=> { %>
-      <div class="slide <%= i === 0 ? 'active' : '' %>" 
-           style="background-image: url('<%= s.imagem_url %>');"
-           aria-label="<%= s.titulo || '' %>">
+      <div class="slide <%= i === 0 ? 'active' : '' %>" style="background-image: url('<%= s.imagem_url %>');"
+        aria-label="<%= s.titulo || '' %>">
+
+        <div class="slide-overlay"></div>
 
         <% if (s.badge) { %>
-          <span class="badge"><%= s.badge %></span>
-        <% } %>
+          <span class="badge neon-badge"><i class="fas fa-bolt"></i>
+            <%= s.badge %>
+          </span>
+          <% } %>
 
-        <% if (s.titulo) { %>
-          <h2><%= s.titulo %></h2>
-        <% } %>
+            <div class="slide-content">
+              <% if (s.titulo) { %>
+                <h2 class="neon-title">
+                  <%= s.titulo %>
+                </h2>
+                <% } %>
 
-        <% if (s.descricao) { %>
-          <p><%= s.descricao %></p>
-        <% } %>
+                  <% if (s.descricao) { %>
+                    <p class="slide-description">
+                      <%= s.descricao %>
+                    </p>
+                    <% } %>
 
-        <% if (s.link_url) { %>
-          <p style="margin-top:10px;">
-            <a href="<%= s.link_url %>" class="btn"><%= s.link_label || 'Saiba mais' %></a>
-          </p>
-        <% } %>
+                      <% if (s.link_url) { %>
+                        <p style="margin-top:12px;">
+                          <a href="<%= s.link_url %>" class="btn neon-btn"><i class="fas fa-play-circle"></i>
+                            <%= s.link_label || 'Ouvir agora' %>
+                          </a>
+                        </p>
+                        <% } %>
+            </div>
       </div>
-    <% }) %>
-  <% } else { %>
-    <!-- Fallback se não houver slides -->
-    <div class="slide active" style="background-image: url('/images/slide1.png');">
-      <span class="badge">Destaque</span>
-      <h2>Ao Vivo Agora</h2>
-      <p>Ouça o melhor da nossa programação!</p>
-    </div>
+      <% }) %>
+        <% } else { %>
+          <!-- Fallback se não houver slides -->
+          <div class="slide active" style="background-image: url('/images/slide1.png');">
+            <div class="slide-overlay"></div>
+            <span class="badge neon-badge"><i class="fas fa-broadcast-tower"></i> Destaque</span>
+            <div class="slide-content">
+              <h2 class="neon-title">Ao Vivo Agora</h2>
+              <p class="slide-description">Ouça o melhor da nossa programação!</p>
+            </div>
+          </div>
 
-    <div class="slide" style="background-image: url('/images/slide2.png');">
-      <span class="badge">IFSP</span>
-      <h2>A rádio do IF Campinas!</h2>
-      <p>Em sintonia com os estudantes</p>
-    </div>
+          <div class="slide" style="background-image: url('/images/slide2.png');">
+            <div class="slide-overlay"></div>
+            <span class="badge neon-badge"><i class="fas fa-school"></i> IFSP</span>
+            <div class="slide-content">
+              <h2 class="neon-title">A rádio do IF Campinas!</h2>
+              <p class="slide-description">Em sintonia com os estudantes</p>
+            </div>
+          </div>
 
-    <div class="slide" style="background-image: url('/images/slide3.jpg');">
-      <span class="badge">Música</span>
-      <h2>A sua música está aqui!</h2>
-      <p>Peça já a sua música!</p>
-    </div>
-  <% } %>
+          <div class="slide" style="background-image: url('/images/slide3.jpg');">
+            <div class="slide-overlay"></div>
+            <span class="badge neon-badge"><i class="fas fa-music"></i> Música</span>
+            <div class="slide-content">
+              <h2 class="neon-title">A sua música está aqui!</h2>
+              <p class="slide-description">Peça já a sua música!</p>
+            </div>
+          </div>
+          <% } %>
 </section>
 
 <!-- ============================ -->
@@ -54,29 +77,37 @@
 <!-- ============================ -->
 <div class="grid cols-3 home-panels">
 
-  <!--  AGORA NO AR -->
-  <div class="card current-show">
-    <h3 class="section-title">🎙️ Agora no ar</h3>
+  <!-- AGORA NO AR -->
+  <div class="card current-show neon-card">
+    <h3 class="section-title"><i class="fas fa-headphones"></i> Agora no ar</h3>
 
     <% if (currentProgram) { %>
       <div class="show-info">
-        <div class="show-name"><%= currentProgram.name %></div>
-        <div class="show-host">com <%= currentProgram.host %></div>
-        <div class="show-time">⏰ <%= currentProgram.start_time %> – <%= currentProgram.end_time %></div>
+        <div class="show-name"><i class="fas fa-broadcast-tower"></i>
+          <%= currentProgram.name %>
+        </div>
+        <div class="show-host">🎤 com <%= currentProgram.host %>
+        </div>
+        <div class="show-time">⏰ <%= currentProgram.start_time %> – <%= currentProgram.end_time %>
+        </div>
       </div>
 
       <div class="show-visual">
         <div class="sound-bars">
-          <div></div><div></div><div></div><div></div><div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
         </div>
       </div>
-    <% } else { %>
-      <p>Nenhum programa ao vivo no momento.</p>
-    <% } %>
+      <% } else { %>
+        <p class="empty">Nenhum programa ao vivo no momento.</p>
+        <% } %>
   </div>
 
-  <!--  PROGRAMAS DE HOJE -->
-  <div class="card program-card">
+  <!-- PROGRAMAS DE HOJE -->
+  <div class="card program-card neon-card">
     <div class="card-header">
       <i class="fas fa-calendar-day"></i>
       <h3>Programas de hoje</h3>
@@ -84,56 +115,67 @@
 
     <% if (todayPrograms && todayPrograms.length) { %>
       <div class="program-grid">
-        <% todayPrograms.forEach(p => { %>
+        <% todayPrograms.forEach(p=> { %>
           <div class="program-item">
             <div class="program-time">
               <i class="far fa-clock"></i>
-              <span><%= p.start_time %> – <%= p.end_time %></span>
+              <span>
+                <%= p.start_time %> – <%= p.end_time %>
+              </span>
             </div>
             <div class="program-info">
-              <h4><%= p.name %></h4>
-              <p><i class="fas fa-user"></i> <%= p.host %></p>
+              <h4><i class="fas fa-microphone"></i>
+                <%= p.name %>
+              </h4>
+              <p><i class="fas fa-user"></i>
+                <%= p.host %>
+              </p>
             </div>
           </div>
-        <% }) %>
+          <% }) %>
       </div>
-    <% } else { %>
-      <p class="empty">Nenhum programa encontrado para hoje.</p>
-    <% } %>
+      <% } else { %>
+        <p class="empty">Nenhum programa encontrado para hoje.</p>
+        <% } %>
   </div>
 
-  <!--  ÚLTIMAS NOTÍCIAS -->
-  <div class="card news-card">
+  <!-- ÚLTIMAS NOTÍCIAS -->
+  <div class="card news-card neon-card">
     <div class="news-header">
       <h3 class="section-title"><i class="fas fa-newspaper"></i> Últimas notícias</h3>
     </div>
 
     <% if (recentNews && recentNews.length) { %>
       <ul class="news-list-home">
-        <% recentNews.forEach(n => { %>
+        <% recentNews.forEach(n=> { %>
           <li class="news-item">
             <% if (n.imagem_url) { %>
               <div class="news-thumb">
                 <img src="<%= n.imagem_url %>" alt="<%= n.titulo %>">
               </div>
-            <% } %>
-            <div class="news-content">
-              <h4 class="news-title">
-                <a href="/noticias#<%= n.id %>" class="news-link"><%= n.titulo %></a>
-              </h4>
-              <p class="news-preview"><%= n.conteudo.substring(0, 100) %>...</p>
-              <a href="/noticias#<%= n.id %>" class="news-readmore">Ver notícia</a>
-            </div>
+              <% } %>
+                <div class="news-content">
+                  <h4 class="news-title">
+                    <a href="/noticias#<%= n.id %>" class="news-link"><i class="fas fa-angle-right"></i>
+                      <%= n.titulo %>
+                    </a>
+                  </h4>
+                  <p class="news-preview">
+                    <%= n.conteudo.substring(0, 100) %>...
+                  </p>
+                  <a href="/noticias#<%= n.id %>" class="news-readmore"><i class="fas fa-arrow-circle-right"></i> Ver
+                    notícia</a>
+                </div>
           </li>
-        <% }) %>
+          <% }) %>
       </ul>
-    <% } else { %>
-      <p class="empty">Nenhuma notícia disponível no momento.</p>
-    <% } %>
+      <% } else { %>
+        <p class="empty">Nenhuma notícia disponível no momento.</p>
+        <% } %>
 
-    <div class="see-all">
-      <a href="/noticias" class="btn-news">Ver todas as notícias</a>
-    </div>
+          <div class="see-all">
+            <a href="/noticias" class="btn-news"><i class="fas fa-list"></i> Ver todas as notícias</a>
+          </div>
   </div>
 </div>
 
@@ -142,12 +184,11 @@
 <!-- ============================ -->
 <section class="gallery-section full-bleed">
   <div class="gallery-wrap">
-    <h2>Galeria</h2>
+    <h2><i class="fas fa-photo-video"></i> Galeria</h2>
     <div class="gallery-grid">
-      <div class="card"><img src="/images/galeria1.jpg" alt="Galeria 1"></div>
-      <div class="card"><img src="/images/slide1.png" alt="Galeria 2"></div>
-      <div class="card"><img src="/images/galeria3.jpg" alt="Galeria 3"></div>
+      <div class="card neon-card"><img src="/images/galeria1.jpg" alt="Galeria 1"></div>
+      <div class="card neon-card"><img src="/images/slide1.png" alt="Galeria 2"></div>
+      <div class="card neon-card"><img src="/images/galeria3.jpg" alt="Galeria 3"></div>
     </div>
   </div>
 </section>
-

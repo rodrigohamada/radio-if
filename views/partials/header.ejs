@@ -1,28 +1,35 @@
 <header class="header">
-    <div class="container wrap">
-        <a class="logo" href="/">
-            <img class="logo-img" src="/images/logo.png" alt="Rádio IF" />
-        </a>
-        <div class="hamburger">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-        <nav class="nav">
-            <a href="/">Início</a>
-            <a href="/programacao">Programação</a>
-            <a href="/equipe">Equipe</a>
-            <a href="/noticias">Notícias</a>
-            <a href="/contato">Contato</a>
-            <% if (!user) { %>
-                <a href="/auth/login">Entrar</a>
-                <a href="/auth/register">Cadastro</a>
-                <% } else { %>
-                    <% if (isAdmin) { %><a href="/admin">Admin</a>
-                        <% } %>
-                            <form action="/auth/logout" method="post" style="display:inline"><button class="btn"
-                                    style="padding:6px 10px;">Sair</button></form>
-                            <% } %>
-        </nav>
+  <div class="container header-inner">
+    <div class="header-left">
+      <a class="logo" href="/">
+        <img class="logo-img" src="/images/logo.png" alt="Rádio IF" />
+      </a>
     </div>
+
+    <div class="header-right">
+      <div class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <nav class="nav">
+        <a href="/">Início</a>
+        <a href="/programacao">Programação</a>
+        <a href="/equipe">Equipe</a>
+        <a href="/noticias">Notícias</a>
+        <a href="/contato">Contato</a>
+        <% if (!user) { %>
+          <a href="/auth/login">Entrar</a>
+          <a href="/auth/register">Cadastro</a>
+        <% } else { %>
+          <% if (isAdmin) { %>
+            <a href="/admin">Admin</a>
+          <% } %>
+          <form action="/auth/logout" method="post" style="display:inline">
+            <button class="btn" style="padding:6px 10px;">Sair</button>
+          </form>
+        <% } %>
+      </nav>
+    </div>
+  </div>
 </header>

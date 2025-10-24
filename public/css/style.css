@@ -33,6 +33,91 @@ body {
   flex-direction: column;
 }
 
+/* Garante a mesma fonte para todas as páginas, inclusive Notícias e Programação */
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a,
+table,
+th,
+td,
+input,
+button,
+select,
+textarea {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, 'Noto Sans' !important;
+}
+
+/* Apenas a HOME terá fundo escuro com efeitos neon */
+body.home-page {
+  background: linear-gradient(180deg, #050505 0%, #0a0a0a 25%, #111 60%, #0b0b0b 100%);
+  color: #e8e8e8;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Camada extra com movimento de luz suave - APENAS HOME */
+body.home-page::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 20% 20%,
+      rgba(0, 255, 128, 0.07),
+      transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(0, 255, 128, 0.05), transparent 50%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(20, 20, 20, 0.6) 100%);
+  background-blend-mode: overlay;
+  animation: bgPulse 15s ease-in-out infinite alternate;
+  z-index: -2;
+}
+
+@keyframes bgPulse {
+  0% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+/* Luz em movimento para dar sensação de profundidade - APENAS HOME */
+body.home-page::after {
+  content: "";
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 120%;
+  height: 180px;
+  background: linear-gradient(90deg,
+      rgba(47, 158, 65, 0.15) 0%,
+      rgba(0, 255, 128, 0.15) 50%,
+      rgba(47, 158, 65, 0.15) 100%);
+  filter: blur(80px);
+  animation: moveGlow 12s linear infinite;
+  z-index: -1;
+}
+
+@keyframes moveGlow {
+  0% {
+    transform: translateX(-10%);
+  }
+
+  100% {
+    transform: translateX(10%);
+  }
+}
+
 main.page {
   flex: 1 0 auto;
   padding-bottom: 96px;
@@ -57,24 +142,35 @@ main.page {
 }
 
 /* ==========================================================
-   HEADER & NAVEGAÇÃO
-   ========================================================== */
+   CABEÇALHO COLORIDO (logo branco / menu verde)
+   ======================================= */
 .header {
   position: sticky;
   top: 0;
   z-index: 200;
-  background: var(--white);
-  border-bottom: 1px solid #eaeaea;
+  background: transparent;
+  border-bottom: none;
 }
 
-.header .wrap {
+.header-inner {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  padding: 0;
+}
+
+/* Parte esquerda (logo) */
+.header-left {
+  background: #fff;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 10px 0;
+  justify-content: center;
+  padding: 8px 20px;
+  border-top-left-radius: 0;
 }
 
-.header .logo {
+/* Logo */
+.logo {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -93,26 +189,35 @@ main.page {
   transform: scale(1.08);
 }
 
-@media (max-width:768px) {
-  .logo-img {
-    height: 70px;
-  }
+/* Parte direita (menu) */
+.header-right {
+  background: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 1;
+  padding: 0 24px;
 }
 
+/* Navegação */
 .nav {
   display: flex;
   gap: 18px;
   transition: max-height .3s ease;
 }
 
-.nav a {
-  color: var(--text);
-  text-decoration: none;
+/* Links do menu */
+.header-right .nav a {
+  color: #fff;
   font-weight: 600;
+  text-decoration: none;
+  padding: 8px 12px;
+  transition: background 0.3s, color 0.3s;
 }
 
-.nav a:hover {
-  color: var(--primary);
+.header-right .nav a:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
 }
 
 /* MENU MOBILE */
@@ -123,12 +228,66 @@ main.page {
   cursor: pointer;
 }
 
-.hamburger span {
+/* Ícones do menu hamburguer */
+.header-right .hamburger span {
+  background: #fff;
   width: 25px;
   height: 3px;
-  background: #333;
   border-radius: 2px;
   transition: all .3s;
+}
+
+@media (max-width:768px) {
+  .logo-img {
+    height: 70px;
+  }
+
+  .header-inner {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .header-left {
+    background: #fff;
+    padding: 8px 16px;
+  }
+
+  .header-right {
+    background: var(--primary);
+    padding: 8px 16px;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .nav {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    flex-direction: column;
+    background: var(--primary);
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .2);
+    overflow: hidden;
+    max-height: 0;
+    width: 200px;
+  }
+
+  .nav.open {
+    max-height: 420px;
+  }
+
+  .nav a {
+    color: #fff;
+    padding: 12px 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .nav a:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
 }
 
 /* ==========================================================
@@ -149,6 +308,18 @@ main.page {
 
 .btn:hover {
   background: var(--primary-700);
+}
+
+/* Botões especiais para home */
+body.home-page .btn {
+  background: linear-gradient(90deg, #2f9e41, #41ff83);
+  box-shadow: 0 0 14px rgba(47, 158, 65, 0.6);
+  border: none;
+}
+
+body.home-page .btn:hover {
+  background: linear-gradient(90deg, #41ff83, #2f9e41);
+  box-shadow: 0 0 20px rgba(47, 158, 65, 0.8);
 }
 
 .btn-sm {
@@ -177,7 +348,7 @@ main.page {
 }
 
 /* ==========================================================
-   SLIDER (HOME)
+   🎛️ SLIDER - estilo neon dinâmico
    ========================================================== */
 .slider {
   position: relative;
@@ -187,6 +358,15 @@ main.page {
   overflow: hidden;
   background: #ddd;
   margin: 18px 0 24px;
+}
+
+/* Slider com efeito de brilho para home */
+body.home-page .slider {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 0 45px rgba(47, 158, 65, 0.3);
+  margin-top: 24px;
 }
 
 .slide {
@@ -202,6 +382,27 @@ main.page {
   text-shadow: 0 3px 14px rgba(0, 0, 0, .6);
   opacity: 0;
   transition: opacity 1s ease-in-out;
+}
+
+body.home-page .slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 50px;
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  opacity: 0;
+  transition: opacity 1.2s ease-in-out;
+}
+
+body.home-page .slide::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.9) 100%);
 }
 
 .slide.active {
@@ -227,10 +428,92 @@ main.page {
   margin: 0;
 }
 
+/* Título do slider com efeito neon na home */
+body.home-page .slide h2 {
+  position: relative;
+  z-index: 2;
+  font-size: 3rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  text-shadow:
+    0 0 10px #00ff88,
+    0 0 30px #00ff88,
+    0 0 60px #00ffaa;
+  animation: textGlow 3s infinite alternate;
+  margin: 0;
+}
+
+@keyframes textGlow {
+  from {
+    text-shadow: 0 0 5px #00ff99, 0 0 15px #00ff99;
+  }
+
+  to {
+    text-shadow: 0 0 25px #00ffcc, 0 0 45px #00ffaa;
+  }
+}
+
 .slide p {
   font-size: 18px;
   margin-top: 5px;
   color: #f0f0f0;
+}
+
+/* Parágrafo do slider na home */
+body.home-page .slide p {
+  position: relative;
+  z-index: 2;
+  font-size: 1.1rem;
+  margin-top: 10px;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+}
+
+/* Botão do slider na home */
+body.home-page .slide .btn {
+  position: relative;
+  z-index: 2;
+  margin-top: 15px;
+  font-size: 1rem;
+  background: linear-gradient(90deg, #41ff83, #00ffaa);
+  border: none;
+  border-radius: 30px;
+  padding: 10px 22px;
+  color: #000;
+  font-weight: 700;
+  text-transform: uppercase;
+  box-shadow: 0 0 20px rgba(0, 255, 128, 0.4);
+  transition: all .3s ease-in-out;
+}
+
+body.home-page .slide .btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 40px rgba(0, 255, 128, 0.8);
+}
+
+/* 🔊 Efeito de equalizador no fundo */
+body.home-page .slider::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 120px;
+  background: repeating-linear-gradient(90deg,
+      rgba(0, 255, 128, 0.1) 0,
+      rgba(0, 255, 128, 0.3) 2px,
+      transparent 4px,
+      transparent 8px);
+  animation: moveBars 4s linear infinite;
+  z-index: 1;
+}
+
+@keyframes moveBars {
+  from {
+    background-position-x: 0;
+  }
+
+  to {
+    background-position-x: 400px;
+  }
 }
 
 @media (max-width:768px) {
@@ -240,6 +523,14 @@ main.page {
 
   .slide h2 {
     font-size: 26px;
+  }
+
+  body.home-page .slide h2 {
+    font-size: 2rem;
+  }
+
+  body.home-page .slide {
+    padding: 30px;
   }
 
   .slide p {
@@ -279,12 +570,43 @@ main.page {
   padding: 16px;
 }
 
+/* ==========================================================
+   💚 CARDS COM BRILHO E ANIMAÇÃO
+   ========================================================== */
+body.home-page .home-panels .card {
+  position: relative;
+  background: rgba(15, 15, 15, 0.9);
+  border: 1px solid rgba(0, 255, 128, 0.15);
+  box-shadow: 0 0 20px rgba(0, 255, 128, 0.15);
+  backdrop-filter: blur(6px);
+  transition: all .4s ease;
+  border-radius: 14px;
+  color: #f1f1f1;
+}
+
+body.home-page .home-panels .card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 0 35px rgba(0, 255, 128, 0.3);
+}
+
 .card h3 {
   margin-bottom: 6px;
 }
 
 .card p {
   color: var(--muted);
+}
+
+/* Pequeno brilho nos títulos */
+body.home-page .section-title {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #41ff83;
+  letter-spacing: 1px;
+  text-shadow: 0 0 10px #41ff83;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 /* ==========================================================
@@ -303,6 +625,25 @@ main.page {
   overflow: hidden;
   box-shadow: 0 4px 14px rgba(0, 0, 0, .15);
   animation: fadeIn .6s ease-in-out;
+}
+
+/* ==========================================================
+   🎧 "Agora no ar" — destaque animado
+   ========================================================== */
+body.home-page .current-show {
+  background: radial-gradient(circle at top left, #0b0b0b 0%, #101010 100%);
+  border: 2px solid rgba(0, 255, 128, 0.2);
+  animation: glowPulse 2.8s infinite alternate;
+}
+
+@keyframes glowPulse {
+  from {
+    box-shadow: 0 0 20px rgba(0, 255, 128, 0.3);
+  }
+
+  to {
+    box-shadow: 0 0 45px rgba(0, 255, 128, 0.6);
+  }
 }
 
 .current-show h3 {
@@ -357,6 +698,11 @@ main.page {
   line-height: 1.15;
 }
 
+body.home-page .show-name {
+  font-size: 1.8rem;
+  text-shadow: 0 0 10px #00ff88;
+}
+
 .show-host {
   font-size: 1rem;
   opacity: .95;
@@ -393,6 +739,11 @@ main.page {
   background: #fff;
   border-radius: 2px;
   animation: soundBar 1.2s infinite ease-in-out;
+}
+
+body.home-page .sound-bars div {
+  background: #41ff83;
+  box-shadow: 0 0 8px #41ff83;
 }
 
 .sound-bars div:nth-child(2) {
@@ -496,16 +847,51 @@ main.page {
   border: 1px solid #eee;
   border-radius: 12px;
   background: var(--white);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   padding: 20px 18px;
   display: flex;
   flex-direction: column;
   gap: 12px;
   transition: box-shadow .3s ease;
 }
+
 .news-card:hover {
-  box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
 }
+
+/* ==========================================================
+   📰 NOTÍCIAS – cards com brilho lateral
+   ========================================================== */
+body.home-page .news-card {
+  position: relative;
+  overflow: hidden;
+  background: rgba(20, 20, 20, 0.9);
+  border: 1px solid rgba(47, 158, 65, 0.3);
+}
+
+body.home-page .news-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  background: linear-gradient(to bottom, #41ff83, transparent);
+  animation: slideLight 3s ease-in-out infinite alternate;
+}
+
+@keyframes slideLight {
+  from {
+    opacity: 0.2;
+    transform: scaleY(0.7);
+  }
+
+  to {
+    opacity: 1;
+    transform: scaleY(1.2);
+  }
+}
+
 .news-header h3 {
   font-size: 1.2rem;
   font-weight: 800;
@@ -514,6 +900,12 @@ main.page {
   align-items: center;
   gap: 8px;
 }
+
+body.home-page .news-card .section-title i {
+  color: #41ff83;
+  text-shadow: 0 0 8px #41ff83;
+}
+
 .news-list-home {
   list-style: none;
   padding: 0;
@@ -522,6 +914,7 @@ main.page {
   flex-direction: column;
   gap: 14px;
 }
+
 .news-item {
   display: flex;
   align-items: flex-start;
@@ -529,48 +922,73 @@ main.page {
   border-bottom: 1px solid #eee;
   padding-bottom: 10px;
 }
+
+body.home-page .news-item {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
 .news-item:last-child {
   border-bottom: none;
 }
+
 .news-icon {
   flex-shrink: 0;
   font-size: 1.2rem;
   color: var(--primary);
   margin-top: 4px;
 }
+
 .news-content {
   flex: 1;
 }
+
 .news-title {
   margin: 0;
   font-size: 1rem;
   font-weight: 700;
   color: #222;
 }
+
+body.home-page .news-title a {
+  color: #fff;
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.25);
+  text-decoration: none;
+}
+
+body.home-page .news-title a:hover {
+  color: #41ff83;
+  text-shadow: 0 0 12px rgba(47, 158, 65, 0.8);
+}
+
 .news-preview {
   margin: 4px 0 6px;
   color: #555;
   font-size: .9rem;
   line-height: 1.4;
 }
+
 .news-link {
   text-decoration: none;
   color: #222;
   transition: color .3s;
 }
+
 .news-link:hover {
   color: var(--primary);
   text-decoration: underline;
 }
+
 .news-readmore {
   color: var(--primary);
   font-weight: 700;
   text-decoration: none;
   font-size: .9rem;
 }
+
 .news-readmore:hover {
   text-decoration: underline;
 }
+
 .btn-news {
   display: inline-block;
   margin-top: 6px;
@@ -580,9 +998,26 @@ main.page {
   font-size: 0.95rem;
   transition: color .3s;
 }
+
 .btn-news:hover {
   color: #3b1ccc;
   text-decoration: underline;
+}
+
+body.home-page .btn-news {
+  color: #41ff83;
+  text-shadow: 0 0 8px #41ff83;
+}
+
+body.home-page .btn-news:hover {
+  color: #fff;
+}
+
+.news-thumb img {
+  border-radius: 8px;
+  height: 80px;
+  width: 80px;
+  object-fit: cover;
 }
 
 /* ==========================================================
@@ -593,11 +1028,26 @@ main.page {
   padding: 0 16px;
 }
 
+/* Galeria com tema especial na home */
+body.home-page .gallery-section {
+  background: linear-gradient(180deg, #0f0f0f 0%, #181818 100%);
+  padding: 40px 0;
+  margin-top: 60px;
+}
+
 .gallery-section h2 {
   margin-bottom: 16px;
   font-size: 28px;
   font-weight: 700;
   color: var(--primary);
+}
+
+body.home-page .gallery-section h2 {
+  color: #41ff83;
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 30px;
+  text-shadow: 0 0 12px #41ff83;
 }
 
 .gallery-grid {
@@ -614,6 +1064,23 @@ main.page {
   transition: transform .25s, box-shadow .25s;
 }
 
+/* ==========================================================
+   🖼️ GALERIA — efeito de zoom e brilho musical
+   ========================================================== */
+body.home-page .gallery-grid .card {
+  overflow: hidden;
+  position: relative;
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 0 25px rgba(0, 255, 128, 0.1);
+  transition: all 0.3s ease;
+}
+
+body.home-page .gallery-grid .card:hover {
+  transform: scale(1.05) rotateZ(1deg);
+  box-shadow: 0 0 45px rgba(0, 255, 128, 0.3);
+}
+
 .gallery-grid .card:hover {
   transform: translateY(-4px);
   box-shadow: 0 6px 14px rgba(0, 0, 0, .15);
@@ -627,9 +1094,30 @@ main.page {
   transition: transform .35s, filter .35s;
 }
 
+body.home-page .gallery-grid img {
+  transition: transform 0.8s ease, filter 0.8s ease;
+}
+
 .gallery-grid img:hover {
   transform: scale(1.06);
   filter: brightness(1.1);
+}
+
+body.home-page .gallery-grid img:hover {
+  transform: scale(1.15);
+  filter: brightness(1.4) contrast(1.2);
+}
+
+/* Cards da galeria na home */
+body.home-page .gallery-grid .card::after {
+  content: "🎧";
+  position: absolute;
+  bottom: 10px;
+  right: 14px;
+  font-size: 22px;
+  color: rgba(255, 255, 255, 0.8);
+  text-shadow: 0 0 10px #41ff83;
+  z-index: 2;
 }
 
 @media (max-width:1024px) {
@@ -663,14 +1151,23 @@ main.page {
    FOOTER
    ========================================================== */
 .footer {
-  background: #111;
+  background: linear-gradient(180deg, #0a0a0a 0%, #050505 100%);
   color: var(--primary);
   position: relative;
   z-index: 800;
   margin-top: auto;
-  border-top: 2px solid var(--primary);
+  border-top: 2px solid transparent;
+  border-image: linear-gradient(90deg, transparent, #2f9e41, #00ff88, #2f9e41, transparent) 1;
   font-size: 14px;
   padding-bottom: 84px;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Footer específico para home com efeito neon */
+body.home-page .footer {
+  background: linear-gradient(180deg, #0a0a0a 0%, #000 50%, #0a0a0a 100%);
+  border-top: 2px solid rgba(47, 158, 65, 0.5);
+  box-shadow: 0 -8px 30px rgba(0, 255, 136, 0.15);
 }
 
 .footer .wrap {
@@ -687,11 +1184,22 @@ main.page {
   color: var(--primary);
   text-decoration: none;
   font-weight: 600;
-  transition: color .3s;
+  transition: color .3s, text-shadow .3s;
 }
 
 .footer a:hover {
   color: #34b249;
+}
+
+/* Links do footer na home com glow */
+body.home-page .footer a {
+  color: #41ff83;
+  text-shadow: 0 0 8px rgba(65, 255, 131, 0.4);
+}
+
+body.home-page .footer a:hover {
+  color: #00ffaa;
+  text-shadow: 0 0 15px rgba(0, 255, 170, 0.8);
 }
 
 @media (max-width:768px) {
@@ -702,7 +1210,7 @@ main.page {
 }
 
 /* ==========================================================
-   RADIO PLAYER (fixo no rodapé)
+   RADIO PLAYER (fixo no rodapé) - TRANSPARENTE
    ========================================================== */
 .player {
   position: fixed !important;
@@ -710,9 +1218,10 @@ main.page {
   right: 0;
   bottom: 0;
   width: 100%;
-  background: #fff;
-  border-top: 3px solid #2f9e41;
-  box-shadow: 0 -4px 18px rgba(0,0,0,0.12);
+  background: rgba(25, 25, 25, 0.75);
+  backdrop-filter: blur(12px);
+  border-top: 2px solid #2f9e41;
+  box-shadow: 0 -2px 16px rgba(0, 0, 0, 0.4);
   z-index: 9999;
 }
 
@@ -731,12 +1240,13 @@ main.page {
   margin: 0;
   font-weight: 700;
   font-size: 16px;
+  color: #f5f5f5;
 }
 
 .player .player-program {
   margin: 2px 0 0;
   font-size: 14px;
-  color: #333;
+  color: #ddd;
   opacity: .9;
 }
 
@@ -747,7 +1257,8 @@ main.page {
   height: 42px;
   border: none;
   border-radius: 50%;
-  background: #2f9e41;
+  background: radial-gradient(circle, #2f9e41 0%, #1d6d32 100%);
+  box-shadow: 0 0 14px rgba(47, 158, 65, 0.6);
   color: #fff;
   font-size: 18px;
   font-weight: 700;
@@ -755,12 +1266,14 @@ main.page {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: transform .15s ease;
+  transition: all 0.3s ease;
 }
 
 .player .btn-play:hover,
-#btn-play:hover { 
-  transform: scale(1.06); 
+#btn-play:hover {
+  background: #40c463;
+  box-shadow: 0 0 20px rgba(64, 196, 99, 0.8);
+  transform: scale(1.1);
 }
 
 /* Slider de volume */
@@ -777,25 +1290,27 @@ body.with-radio-player {
 
 /* Responsivo para player */
 @media (max-width: 600px) {
+
   .player .player-container,
   .player .container.wrap {
     flex-direction: column;
     align-items: stretch;
     gap: 8px;
   }
-  body.with-radio-player { 
-    padding-bottom: 110px; 
+
+  body.with-radio-player {
+    padding-bottom: 110px;
   }
 }
 
 /* Compatibilidade com estilos antigos do player */
 .player .title {
   font-weight: 700;
-  color: var(--primary);
+  color: #f5f5f5;
 }
 
 .player .program {
-  color: var(--muted);
+  color: #ddd;
   font-size: 14px;
 }
 
@@ -841,7 +1356,7 @@ body.with-radio-player {
   width: 160px;
   height: 6px;
   border-radius: 5px;
-  background: #dcdcdc; /* trilho cinza */
+  background: rgba(255, 255, 255, 0.1);
   outline: none;
   cursor: pointer;
 }
@@ -850,70 +1365,45 @@ body.with-radio-player {
 .player input[type=range]::-webkit-slider-runnable-track {
   height: 6px;
   border-radius: 5px;
-  background: #dcdcdc; /* cinza */
+  background: rgba(255, 255, 255, 0.1);
 }
+
 .player input[type=range]::-moz-range-track {
   height: 6px;
   border-radius: 5px;
-  background: #dcdcdc; /* cinza */
+  background: rgba(255, 255, 255, 0.1);
 }
 
-/* Bolinha (thumb) — verde */
+/* Bolinha (thumb) — verde neon */
 .player input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 18px;
   height: 18px;
-  background: var(--primary); /* verde */
+  background: #2f9e41;
   border-radius: 50%;
   cursor: pointer;
-  border: 2px solid #fff;
+  border: 2px solid #000;
   margin-top: -6px;
-  transition: background 0.3s;
+  transition: background 0.3s, box-shadow 0.3s;
+  box-shadow: 0 0 8px rgba(47, 158, 65, 0.4);
 }
+
 .player input[type=range]::-moz-range-thumb {
   width: 18px;
   height: 18px;
-  background: var(--primary); /* verde */
+  background: #2f9e41;
   border-radius: 50%;
   cursor: pointer;
-  border: 2px solid #fff;
-  transition: background 0.3s;
+  border: 2px solid #000;
+  transition: background 0.3s, box-shadow 0.3s;
+  box-shadow: 0 0 8px rgba(47, 158, 65, 0.4);
 }
 
-/* Hover — verde mais escuro */
+/* Hover — brilho mais intenso */
 .player input[type=range]:hover::-webkit-slider-thumb,
 .player input[type=range]:hover::-moz-range-thumb {
-  background: var(--primary-700);
-}
-
-/* ==========================================================
-   NAV MOBILE
-   ========================================================== */
-@media (max-width:768px) {
-  .hamburger {
-    display: flex;
-  }
-
-  .nav {
-    position: absolute;
-    top: 90px;
-    right: 16px;
-    flex-direction: column;
-    background: var(--white);
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, .2);
-    overflow: hidden;
-    max-height: 0;
-  }
-
-  .nav.open {
-    max-height: 420px;
-  }
-
-  .nav a {
-    padding: 10px 20px;
-    border-top: 1px solid #eee;
-  }
+  background: #40c463;
+  box-shadow: 0 0 15px rgba(64, 196, 99, 0.6);
 }
 
 /* ==========================================================
@@ -1131,6 +1621,17 @@ body.with-radio-player {
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
+/* Programas de hoje na home */
+body.home-page .program-card {
+  background: rgba(16, 16, 16, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+body.home-page .program-card .card-header i {
+  color: #41ff83;
+  text-shadow: 0 0 10px #41ff83;
+}
+
 .program-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
@@ -1143,6 +1644,10 @@ body.with-radio-player {
   font-size: 1.3rem;
   font-weight: 700;
   color: #222;
+}
+
+body.home-page .program-card .card-header {
+  color: #f1f1f1;
 }
 
 .program-card .card-header i {
@@ -1161,6 +1666,18 @@ body.with-radio-player {
   border-radius: 10px;
   padding: 12px 16px;
   transition: background 0.3s, transform 0.2s;
+}
+
+/* Itens de programa na home */
+body.home-page .program-item {
+  background: rgba(47, 158, 65, 0.1);
+  border: 1px solid rgba(47, 158, 65, 0.3);
+  transition: all .25s ease;
+}
+
+body.home-page .program-item:hover {
+  background: rgba(47, 158, 65, 0.2);
+  transform: translateX(5px);
 }
 
 .program-item:hover {
@@ -1184,10 +1701,18 @@ body.with-radio-player {
   color: #222;
 }
 
+body.home-page .program-info h4 {
+  color: #f1f1f1;
+}
+
 .program-info p {
   margin: 2px 0 0 0;
   color: #666;
   font-size: 0.9rem;
+}
+
+body.home-page .program-info p {
+  color: #ccc;
 }
 
 .program-info i {
@@ -1199,4 +1724,41 @@ body.with-radio-player {
   text-align: center;
   color: #999;
   font-style: italic;
+}
+
+/* ==========================================================
+   🌟 BRILHO PULSANTE EM ÍCONES
+   ========================================================== */
+body.home-page i {
+  color: #41ff83;
+  text-shadow: 0 0 12px #41ff83;
+  animation: iconPulse 2s infinite alternate;
+}
+
+@keyframes iconPulse {
+  from {
+    filter: drop-shadow(0 0 4px #00ffaa);
+    opacity: 0.8;
+  }
+
+  to {
+    filter: drop-shadow(0 0 12px #00ffaa);
+    opacity: 1;
+  }
+}
+
+/* ==========================================================
+   ✨ SCROLLBAR PERSONALIZADA
+   ========================================================== */
+body.home-page::-webkit-scrollbar {
+  width: 10px;
+}
+
+body.home-page::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #00ffaa, #2f9e41);
+  border-radius: 10px;
+}
+
+body.home-page::-webkit-scrollbar-track {
+  background: #0a0a0a;
 }

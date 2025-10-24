@@ -5,33 +5,116 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title><%= title || 'Rádio IF' %></title>
 
-  <!-- Favicons -->
+  <!-- ========================= -->
+  <!-- FAVICONS E METADADOS -->
+  <!-- ========================= -->
   <link rel="icon" href="/images/favicon.svg?v=2" type="image/svg+xml">
   <link rel="icon" href="/images/favicon.png?v=2" type="image/png" sizes="32x32">
   <link rel="icon" href="/images/favicon-16.png?v=2" type="image/png" sizes="16x16">
   <link rel="apple-touch-icon" href="/images/apple-touch-icon.png?v=2" sizes="180x180">
   <meta name="theme-color" content="#2f9e41">
+  <meta name="description" content="A Rádio IF Campinas — em sintonia com você! Músicas, notícias, programas e muito mais.">
+  <meta name="author" content="Rádio IF - Instituto Federal de Campinas">
 
+  <!-- ========================= -->
+  <!-- FONTES E ÍCONES -->
+  <!-- ========================= -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
+  <!-- Font Awesome (ícones de rádio, música, etc.) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-1Fj1WOSiVtqZRt8UpbyyFznIUVYc1Cx+jE7BOmJUp2/7a6K2Ytpz8V7d8Y4ZmKQCeC8aLqNhyCEp5UOQpsQppA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- ========================= -->
+  <!-- ESTILOS -->
+  <!-- ========================= -->
   <link rel="stylesheet" href="/css/style.css" />
+
+  <style>
+    /* Fonte padrão moderna */
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      letter-spacing: 0.2px;
+      transition: background-color 0.8s, color 0.8s;
+    }
+
+    /* Fonte especial para títulos e rádio */
+    h1, h2, .neon-title {
+      font-family: 'Orbitron', 'Poppins', sans-serif;
+    }
+
+    /* Transição suave entre páginas */
+    main.page {
+      animation: fadeInPage 0.8s ease forwards;
+    }
+
+    @keyframes fadeInPage {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Efeito glow de carregamento no topo */
+    #page-glow {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, #00ffaa, #2f9e41, #00ffaa);
+      background-size: 200% 100%;
+      animation: glowBar 5s linear infinite;
+      z-index: 99999;
+    }
+
+    @keyframes glowBar {
+      0% { background-position: 0% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    /* Remove flash branco durante carregamento */
+    html {
+      background-color: #000;
+    }
+  </style>
 </head>
-<body>
+
+<!-- Adiciona automaticamente o tema da home -->
+<body class="<%= (title === 'Home' || title === 'Rádio IF') ? 'home-page' : '' %>">
+  <div id="page-glow"></div>
+
+  <!-- CABEÇALHO -->
   <%- include('../partials/header') %>
 
-  <!-- CONTEÚDO DINÂMICO -->
+  <!-- CONTEÚDO PRINCIPAL -->
   <main id="page-container" class="page">
     <div class="container">
       <%- body %>
     </div>
   </main>
 
-  <!-- ELEMENTOS FIXOS -->
+  <!-- RODAPÉ E PLAYER FIXO -->
   <%- include('../partials/footer') %>
   <%- include('../partials/player') %>
 
+  <!-- ========================= -->
   <!-- SCRIPTS -->
+  <!-- ========================= -->
   <script src="/js/navigation.js"></script>
   <script src="/js/main.js"></script>
   <script src="/js/home.js"></script> 
   <script src="/js/player.js" defer></script>
+
+  <!-- Efeito suave de fade no carregamento -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const page = document.querySelector('main.page');
+      page.style.opacity = '0';
+      setTimeout(() => { page.style.transition = 'opacity 1s'; page.style.opacity = '1'; }, 100);
+    });
+  </script>
 </body>
 </html>
