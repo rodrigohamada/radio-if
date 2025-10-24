@@ -17,16 +17,21 @@
 <body>
   <%- include('../partials/header') %>
 
-  <main class="page">
+  <!-- CONTEÚDO DINÂMICO -->
+  <main id="page-container" class="page">
     <div class="container">
       <%- body %>
     </div>
   </main>
 
+  <!-- ELEMENTOS FIXOS -->
   <%- include('../partials/footer') %>
   <%- include('../partials/player') %>
 
+  <!-- SCRIPTS -->
+  <script src="/js/navigation.js"></script>
   <script src="/js/main.js"></script>
+  <script src="/js/home.js"></script> 
   <script src="/js/player.js" defer></script>
 </body>
 </html>

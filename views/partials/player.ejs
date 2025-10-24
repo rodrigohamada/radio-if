@@ -1,12 +1,17 @@
-<div class="player">
-  <div class="container wrap">
-    <div>
-      <div class="title">Rádio IF</div>
-      <div class="program">Programa: <span id="current-program">Carregando…</span></div>
+<div class="player"
+     data-stream-urls='[
+       "http://s2.myradiostream.com:9020/;",
+       "http://s2.myradiostream.com:9020/;stream.mp3",
+       "http://s2.myradiostream.com:9020/stream"
+     ]'>
+  <div class="player-container">
+    <div class="player-info">
+      <h3 class="player-title">Rádio IF</h3>
+      <p id="current-program" class="player-program">Carregando programação…</p>
     </div>
-    <div class="controls">
-      <button id="btn-play" title="Play/Pause">▶</button>
-      <input id="vol" type="range" min="0" max="100" value="80" />
+    <div class="player-controls">
+      <button id="btn-play" class="btn-play" title="Play/Pause">▶</button>
+      <input id="vol" type="range" min="0" max="100" value="80" class="vol-slider" />
     </div>
   </div>
 </div>
