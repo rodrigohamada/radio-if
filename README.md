@@ -25,6 +25,57 @@ O **Rádio IF** é uma aplicação web que tem como objetivo oferecer uma experi
 
 ---
 
+## 📄 Pitch Técnico
+
+1. **Tema do Sistema**
+
+O sistema será uma plataforma moderna para uma Web Rádio chamada Rádio IF. O objetivo
+é oferecer uma transmissão contínua de áudio, com interface responsiva e interativa. O site permitirá acompanhar a programação ao vivo,
+conhecer os locutores, ler notícias e enviar mensagens de contato.
+
+
+2. **Entidades Principais**
+
+Liste as entidades que farão parte do sistema (mínimo de 5), com uma breve explicação de
+cada uma.
+
+● Entidade 1: Programa – Representa os programas da rádio, incluindo nome,
+descrição e horários de transmissão.
+● Entidade 2: Locutor – Representa os apresentadores e DJs responsáveis pelos
+programas, com informações biográficas e redes sociais.
+● Entidade 3: Notícia – Conteúdos de destaque e artigos culturais publicados pela
+rádio.
+● Entidade 4: Ouvintes – Usufruem do rádio ouvindo a programação e enviando
+pedidos de música.
+● Entidade 5: Usuário Administrador – Responsável por gerenciar os conteúdos do site
+e atualizar informações da rádio.
+
+
+3. **Relacionamentos**
+
+Indique como as entidades se relacionam (pelo menos 1 relacionamento N:N).
+
+- Um Locutor pode apresentar vários Programas (1:N).
+- Um Programa pode ter múltiplos Locutores (N:N).
+- Notícias são cadastradas por Usuários Administradores (1:N).
+- Mensagens de Contato são enviadas por ouvintes e ficam armazenadas para consulta (N:1).
+
+
+4. **Tipos de Dados**
+
+Marque os tipos de dados que estarão presentes no sistema:
+
+[X] Texto
+[X] Numérico
+[X] Data
+[X] URL
+[X] Outros: Áudio
+
+5. Telas / Fluxos Principais
+
+![alt text](image.png)
+
+
 ## 🧰 Tecnologias Utilizadas
 
 - **Node.js** – ambiente de execução JavaScript no servidor
@@ -125,8 +176,3 @@ O painel administrativo permite gerenciar:
 ## 📄 Licença
 
 Este projeto foi desenvolvido para fins educacionais como parte da disciplina de Desenvolvimento Web 2 do Instituto Federal de Campinas.
-
-
-
-
-
