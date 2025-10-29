@@ -12,16 +12,17 @@
         <%= m.funcao || '' %>
       </p>
 
+      
       <p style="font-size:15px;">
         <% if (m.instagram) { %>
           <a href="<%= m.instagram %>" target="_blank" style="color:var(--primary); text-decoration:none; font-weight:600;">
-            📸 Instagram
+            Instagram
           </a>
         <% } %>
         <% if (m.instagram && m.linkedin) { %> • <% } %>
         <% if (m.linkedin) { %>
           <a href="<%= m.linkedin %>" target="_blank" style="color:var(--primary); text-decoration:none; font-weight:600;">
-            💼 LinkedIn
+            LinkedIn
           </a>
         <% } %>
       </p>
