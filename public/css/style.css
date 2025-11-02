@@ -851,7 +851,7 @@ body.home-page .sound-bars div {
 }
 
 /* ==========================================================
-   📰 BLOCO DE NOTÍCIAS NA HOME
+   📰 BLOCO DE NOTÍCIAS NA HOME - DESIGN PREMIUM
    ========================================================== */
 .news-card {
   border: 1px solid #eee;
@@ -869,51 +869,93 @@ body.home-page .sound-bars div {
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
 }
 
-/* ==========================================================
-   📰 NOTÍCIAS – cards com brilho lateral
-   ========================================================== */
+/* Card de notícias com design moderno na home */
 body.home-page .news-card {
   position: relative;
   overflow: hidden;
-  background: rgba(20, 20, 20, 0.9);
-  border: 1px solid rgba(47, 158, 65, 0.3);
+  background: linear-gradient(135deg, rgba(15, 20, 15, 0.95) 0%, rgba(20, 25, 20, 0.98) 100%);
+  border: 1px solid rgba(65, 255, 131, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  transition: all 0.4s ease;
 }
 
+body.home-page .news-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 48px rgba(65, 255, 131, 0.15);
+  border-color: rgba(65, 255, 131, 0.4);
+}
+
+/* Brilho lateral animado */
 body.home-page .news-card::before {
   content: "";
   position: absolute;
   left: 0;
   top: 0;
   height: 100%;
-  width: 4px;
-  background: linear-gradient(to bottom, #41ff83, transparent);
-  animation: slideLight 3s ease-in-out infinite alternate;
+  width: 3px;
+  background: linear-gradient(to bottom, 
+    transparent 0%,
+    #41ff83 20%,
+    #00ffaa 50%,
+    #41ff83 80%,
+    transparent 100%
+  );
+  animation: slideLight 4s ease-in-out infinite;
 }
 
 @keyframes slideLight {
-  from {
-    opacity: 0.2;
-    transform: scaleY(0.7);
+  0%, 100% {
+    opacity: 0.3;
+    transform: translateY(-20%);
   }
-
-  to {
+  50% {
     opacity: 1;
-    transform: scaleY(1.2);
+    transform: translateY(20%);
   }
 }
 
+/* Efeito de brilho no fundo */
+body.home-page .news-card::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(65, 255, 131, 0.03) 0%, transparent 70%);
+  animation: rotateBg 20s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes rotateBg {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 .news-header h3 {
-  font-size: 1.2rem;
-  font-weight: 800;
+  font-size: 1.3rem;
+  font-weight: 900;
   color: var(--primary);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+body.home-page .news-header h3 {
+  color: #41ff83;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-size: 1.2rem;
 }
 
 body.home-page .news-card .section-title i {
   color: #41ff83;
-  text-shadow: 0 0 8px #41ff83;
+  text-shadow: 0 0 12px #41ff83;
+  font-size: 1.4rem;
 }
 
 .news-list-home {
@@ -922,19 +964,31 @@ body.home-page .news-card .section-title i {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
+  position: relative;
+  z-index: 1;
 }
 
 .news-item {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 10px;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
 }
 
 body.home-page .news-item {
-  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 255, 128, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+body.home-page .news-item:hover {
+  background: rgba(0, 255, 128, 0.08);
+  border-color: rgba(65, 255, 131, 0.2);
+  transform: translateX(8px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
 .news-item:last-child {
@@ -943,9 +997,19 @@ body.home-page .news-item {
 
 .news-icon {
   flex-shrink: 0;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   color: var(--primary);
-  margin-top: 4px;
+  margin-top: 2px;
+  transition: transform 0.3s ease;
+}
+
+body.home-page .news-icon {
+  color: #41ff83;
+  filter: drop-shadow(0 0 8px rgba(65, 255, 131, 0.6));
+}
+
+body.home-page .news-item:hover .news-icon {
+  transform: scale(1.2) rotate(5deg);
 }
 
 .news-content {
@@ -954,27 +1018,34 @@ body.home-page .news-item {
 
 .news-title {
   margin: 0;
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 700;
   color: #222;
+  line-height: 1.4;
 }
 
 body.home-page .news-title a {
-  color: #fff;
-  text-shadow: 0 0 6px rgba(255, 255, 255, 0.25);
+  color: #f5f5f5;
   text-decoration: none;
+  transition: all 0.3s ease;
+  display: inline-block;
 }
 
 body.home-page .news-title a:hover {
   color: #41ff83;
-  text-shadow: 0 0 12px rgba(47, 158, 65, 0.8);
+  text-shadow: 0 0 15px rgba(65, 255, 131, 0.6);
+  transform: translateX(4px);
 }
 
 .news-preview {
-  margin: 4px 0 6px;
+  margin: 6px 0 8px;
   color: #555;
   font-size: .9rem;
-  line-height: 1.4;
+  line-height: 1.5;
+}
+
+body.home-page .news-preview {
+  color: #b0b0b0;
 }
 
 .news-link {
@@ -1260,7 +1331,7 @@ body.home-page .footer a:hover {
   opacity: .9;
 }
 
-/* Botão play simples e consistente */
+/* 🔊 PULSO DE ENERGIA NO BOTÃO DE PLAY */
 .player .btn-play,
 #btn-play {
   width: 42px;
@@ -1277,6 +1348,29 @@ body.home-page .footer a:hover {
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
+  position: relative;
+  overflow: visible;
+}
+
+.player .btn-play::after,
+#btn-play::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(65, 255, 131, 0.5);
+  animation: playPulse 2.5s infinite ease-in-out;
+}
+
+@keyframes playPulse {
+  0% { 
+    transform: scale(1); 
+    opacity: 0.8; 
+  }
+  100% { 
+    transform: scale(1.6); 
+    opacity: 0; 
+  }
 }
 
 .player .btn-play:hover,
