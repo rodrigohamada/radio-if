@@ -27,6 +27,25 @@ exports.requests = async (req, res) => {
 };
 
 // =======================================
+// Excluir pedido de música
+// =======================================
+exports.deleteMusicRequest = async (req, res) => {
+  const { id } = req.params;
+  
+  try {
+    await Contact.delete(id);
+    
+    res.status(200).json({ success: true, message: 'Pedido excluído com sucesso.' });
+  } catch (err) {
+    console.error('[AdminController] Erro ao excluir pedido:', err);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Não foi possível excluir o pedido.' 
+    });
+  }
+};
+
+// =======================================
 // Painel - Mensagens e Reclamações
 // =======================================
 exports.contacts = async (req, res) => {
@@ -45,6 +64,25 @@ exports.contacts = async (req, res) => {
       title: 'Erro ao carregar contatos',
       message: 'Não foi possível carregar as mensagens.',
       error: err
+    });
+  }
+};
+
+// =======================================
+// Excluir contato (mensagem/reclamação)
+// =======================================
+exports.deleteContact = async (req, res) => {
+  const { id } = req.params;
+  
+  try {
+    await Contact.delete(id);
+    
+    res.status(200).json({ success: true, message: 'Mensagem excluída com sucesso.' });
+  } catch (err) {
+    console.error('[AdminController] Erro ao excluir contato:', err);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Não foi possível excluir a mensagem.' 
     });
   }
 };
@@ -216,17 +254,23 @@ exports.deleteNews = async (req, res) => {
 // =======================================
 exports.manageTeam = async (req, res) => {
   try {
-    const [rows] = await db.query('SELECT * FROM equipe ORDER BY nome');
+    // 🔹 Equipe exibida na página "Equipe"
+    const [teamRows] = await db.query('SELECT * FROM equipe ORDER BY nome');
+
+    // 🔹 Todos os usuários cadastrados no sistema
+    const [userRows] = await db.query('SELECT id, nome, email, administrador FROM usuarios ORDER BY nome');
+
     res.render('admin/equipe', {
       title: 'Gerenciar Equipe - Rádio IF',
       user: req.session.user,
-      members: rows
+      members: teamRows,
+      users: userRows
     });
   } catch (err) {
-    console.error('[AdminController] Erro ao carregar equipe:', err);
+    console.error('[AdminController] Erro ao carregar equipe/usuários:', err);
     res.status(500).render('error', {
       title: 'Erro ao carregar equipe',
-      message: 'Não foi possível carregar os integrantes da equipe.',
+      message: 'Não foi possível carregar os integrantes da equipe e usuários cadastrados.',
       error: err
     });
   }
@@ -316,33 +360,6 @@ exports.deleteMember = async (req, res) => {
     res.status(500).render('error', {
       title: 'Erro ao excluir integrante',
       message: 'Falha ao remover integrante da equipe.',
-      error: err
-    });
-  }
-};
-
-// =======================================
-// GERENCIAR USUÁRIOS (dentro da página da equipe)
-// =======================================
-exports.manageTeam = async (req, res) => {
-  try {
-    // 🔹 Equipe exibida na página "Equipe"
-    const [teamRows] = await db.query('SELECT * FROM equipe ORDER BY nome');
-
-    // 🔹 Todos os usuários cadastrados no sistema
-    const [userRows] = await db.query('SELECT id, nome, email, administrador FROM usuarios ORDER BY nome');
-
-    res.render('admin/equipe', {
-      title: 'Gerenciar Equipe - Rádio IF',
-      user: req.session.user,
-      members: teamRows,
-      users: userRows
-    });
-  } catch (err) {
-    console.error('[AdminController] Erro ao carregar equipe/usuários:', err);
-    res.status(500).render('error', {
-      title: 'Erro ao carregar equipe',
-      message: 'Não foi possível carregar os integrantes da equipe e usuários cadastrados.',
       error: err
     });
   }

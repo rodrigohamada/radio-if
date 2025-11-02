@@ -21,6 +21,16 @@ class Contact {
     );
     return rows;
   }
+
+  static async delete(id) {
+    try {
+      await db.query('DELETE FROM contatos WHERE id = ?', [id]);
+      return true;
+    } catch (error) {
+      console.error('[Contact Model] Erro ao deletar contato:', error);
+      throw error;
+    }
+  }
 }
 
 module.exports = Contact;

@@ -19,17 +19,25 @@ router.get('/', adminOnly, (req, res) => {
 router.get('/pedidos', adminOnly, adminController.requests);
 
 // =============================
+// Excluir Pedido de Música
+// =============================
+router.post('/pedidos/excluir/:id', adminOnly, adminController.deleteMusicRequest);
+
+// =============================
 // Mensagens e Reclamações
 // =============================
 router.get('/contatos', adminOnly, adminController.contacts);
+
+// =============================
+// Excluir Contato
+// =============================
+router.post('/contatos/excluir/:id', adminOnly, adminController.deleteContact);
 
 // =============================
 // APIs dinâmicas
 // =============================
 router.get('/api/pedidos', adminOnly, adminController.musicRequestsApi);
 router.get('/api/contatos', adminOnly, adminController.contactsApi);
-
-module.exports = router;
 
 // =============================
 // Gerenciar Notícias
@@ -63,9 +71,9 @@ router.get('/usuarios/admin/:id', adminOnly, adminController.makeAdmin);
 // Excluir usuário
 router.get('/usuarios/excluir/:id', adminOnly, adminController.deleteUser);
 
-// =====================
+// =============================
 // SLIDES
-// =====================
+// =============================
 router.get('/slides', adminOnly, adminController.manageSlides);
 router.get('/slides/novo', adminOnly, adminController.newSlideForm);
 router.post('/slides/novo', adminOnly, adminController.createSlide);
@@ -82,3 +90,8 @@ router.post('/programas/novo', adminOnly, adminController.createProgram);
 router.get('/programas/editar/:id', adminOnly, adminController.editProgramForm);
 router.post('/programas/editar/:id', adminOnly, adminController.updateProgram);
 router.get('/programas/excluir/:id', adminOnly, adminController.deleteProgram);
+
+// =============================
+// IMPORTANTE: module.exports deve ser a ÚLTIMA linha
+// =============================
+module.exports = router;

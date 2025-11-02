@@ -5,68 +5,194 @@
   <p style="color:var(--muted)">Abaixo estão as mensagens enviadas pelos usuários.</p>
 </div>
 
-<table id="contatos-table" style="width:100%; border-collapse:collapse; max-width:960px; margin:auto;">
-  <thead>
-    <tr style="background:#f5f5f5;">
-      <th style="padding:8px; border:1px solid #ddd;">#</th>
-      <th style="padding:8px; border:1px solid #ddd;">Usuário</th>
-      <th style="padding:8px; border:1px solid #ddd;">E-mail</th>
-      <th style="padding:8px; border:1px solid #ddd;">Assunto</th>
-      <th style="padding:8px; border:1px solid #ddd;">Mensagem</th>
-      <th style="padding:8px; border:1px solid #ddd;">Data</th>
-    </tr>
-  </thead>
-  <tbody id="contatos-body">
-    <% if (contatos && contatos.length) { %>
-      <% contatos.forEach((c, i) => { %>
-        <tr>
-          <td><%= i + 1 %></td>
-          <td><%= c.nome %></td>
-          <td><%= c.email %></td>
-          <td><%= c.assunto %></td>
-          <td style="max-width:300px; white-space:pre-wrap;"><%= c.mensagem %></td>
-          <td><%= new Date(c.data_envio).toLocaleString('pt-BR') %></td>
-        </tr>
-      <% }) %>
-    <% } else { %>
-      <tr><td colspan="6" style="text-align:center; padding:12px;">Nenhuma mensagem encontrada.</td></tr>
-    <% } %>
-  </tbody>
-</table>
+<!-- Dados das mensagens completas -->
+<script id="mensagens-contato-data" type="application/json">
+<%- JSON.stringify(contatos.reduce((acc, c) => { acc[c.id] = c.mensagem; return acc; }, {})) %>
+</script>
+
+<div style="max-width:1200px; margin:auto; overflow-x:auto;">
+  <table id="contatos-table" style="width:100%; border-collapse:collapse;">
+    <thead>
+      <tr style="background:#f5f5f5;">
+        <th style="padding:12px 8px; border:1px solid #ddd;">#</th>
+        <th style="padding:12px 8px; border:1px solid #ddd;">Usuário</th>
+        <th style="padding:12px 8px; border:1px solid #ddd;">E-mail</th>
+        <th style="padding:12px 8px; border:1px solid #ddd;">Assunto</th>
+        <th style="padding:12px 8px; border:1px solid #ddd; min-width:200px;">Mensagem</th>
+        <th style="padding:12px 8px; border:1px solid #ddd;">Data</th>
+        <th style="padding:12px 8px; border:1px solid #ddd; text-align:center;">Ações</th>
+      </tr>
+    </thead>
+    <tbody id="contatos-body">
+      <% if (contatos && contatos.length) { %>
+        <% contatos.forEach((c, i) => { %>
+          <tr>
+            <td style="padding:8px; border:1px solid #ddd;"><%= i + 1 %></td>
+            <td style="padding:8px; border:1px solid #ddd;"><%= c.nome %></td>
+            <td style="padding:8px; border:1px solid #ddd;"><%= c.email %></td>
+            <td style="padding:8px; border:1px solid #ddd;"><%= c.assunto %></td>
+            <td style="padding:8px; border:1px solid #ddd; max-width:300px;">
+              <div class="mensagem-truncada-contato" data-msg-id="<%= c.id %>">
+                <span class="texto-msg"><%= c.mensagem.length > 100 ? c.mensagem.substring(0, 100) : c.mensagem %></span>
+                <% if (c.mensagem.length > 100) { %>
+                  <span class="reticencias">...</span>
+                  <button class="btn-ver-mais-contato" data-id="<%= c.id %>" style="background:none; border:none; cursor:pointer; text-decoration:underline; padding:0; margin-left:4px;">Ver mais</button>
+                <% } %>
+              </div>
+            </td>
+            <td style="padding:8px; border:1px solid #ddd; white-space:nowrap;"><%= new Date(c.data_envio).toLocaleString('pt-BR') %></td>
+            <td style="padding:8px; border:1px solid #ddd; text-align:center;">
+              <!-- sem onclick inline -->
+              <button class="btn-excluir-contato" data-id="<%= c.id %>" style="background:#dc3545; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer;">🗑️</button>
+            </td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr><td colspan="7" style="text-align:center; padding:12px; border:1px solid #ddd;">Nenhuma mensagem encontrada.</td></tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
 
 <div style="text-align:center; margin-top:30px;">
   <a href="/admin/" style="color:var(--primary); font-weight:600; text-decoration:none;">← Voltar ao painel</a>
 </div>
 
 <script>
-async function atualizarContatos() {
-  try {
-    const res = await fetch('/admin/api/contatos');
-    if (!res.ok) throw new Error('Erro ao buscar contatos');
-    const dados = await res.json();
-    const tbody = document.getElementById('contatos-body');
+// Executa imediatamente (sem depender de DOMContentLoaded)
+(function () {
+  console.log('🚀 [contatos] script iniciado');
 
-    if (!dados.length) {
-      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:12px;">Nenhuma mensagem encontrada.</td></tr>';
+  let mensagensContatoData = {};
+  const dataEl = document.getElementById('mensagens-contato-data');
+  try {
+    mensagensContatoData = dataEl ? JSON.parse(dataEl.textContent || '{}') : {};
+    console.log('✅ [contatos] mensagens carregadas:', Object.keys(mensagensContatoData).length);
+  } catch (e) {
+    console.error('❌ [contatos] erro ao parsear mensagens:', e);
+    mensagensContatoData = {};
+  }
+
+  function toggleMensagemContato(id) {
+    const container = document.querySelector('[data-msg-id="' + id + '"]');
+    if (!container) return;
+    const texto = container.querySelector('.texto-msg');
+    const ret = container.querySelector('.reticencias');
+    const btn = container.querySelector('.btn-ver-mais-contato');
+    const full = mensagensContatoData[id] || '';
+    const expanded = container.dataset.expanded === '1';
+
+    if (expanded) {
+      texto.textContent = full.substring(0, 100);
+      if (ret) ret.style.display = 'inline';
+      if (btn) btn.textContent = 'Ver mais';
+      container.dataset.expanded = '0';
+    } else {
+      texto.textContent = full;
+      if (ret) ret.style.display = 'none';
+      if (btn) btn.textContent = 'Ver menos';
+      container.dataset.expanded = '1';
+    }
+  }
+
+  // Exposição opcional no window (não dependemos de onclick inline, mas fica disponível)
+  window.excluirContato = function (id) {
+    console.log('🗑️ [contatos] excluir ID:', id);
+    if (!confirm('Tem certeza que deseja excluir esta mensagem?')) return;
+
+    fetch('/admin/contatos/excluir/' + id, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    })
+    .then(res => res.ok ? res.json() : Promise.reject('Erro HTTP ' + res.status))
+    .then(() => {
+      alert('Mensagem excluída com sucesso!');
+      atualizarContatos();
+    })
+    .catch(err => {
+      console.error('💥 [contatos] erro ao excluir:', err);
+      alert('Erro ao excluir mensagem.');
+    });
+  };
+
+  // Delegação de eventos (funciona após SPA e atualizações do tbody)
+  document.addEventListener('click', (e) => {
+    const verMaisBtn = e.target.closest('.btn-ver-mais-contato');
+    if (verMaisBtn) {
+      toggleMensagemContato(verMaisBtn.dataset.id);
       return;
     }
 
-    tbody.innerHTML = dados.map((c, i) => `
-      <tr>
-        <td>${i + 1}</td>
-        <td>${c.nome}</td>
-        <td>${c.email}</td>
-        <td>${c.assunto}</td>
-        <td style="max-width:300px; white-space:pre-wrap;">${c.mensagem}</td>
-        <td>${new Date(c.data_envio).toLocaleString('pt-BR')}</td>
-      </tr>
-    `).join('');
-  } catch (err) {
-    console.error('Falha ao atualizar contatos:', err);
-  }
-}
+    const excluirBtn = e.target.closest('.btn-excluir-contato');
+    if (excluirBtn) {
+      const id = excluirBtn.dataset.id;
+      window.excluirContato(id);
+    }
+  });
 
-// Atualiza a cada 10 segundos
-setInterval(atualizarContatos, 10000);
-atualizarContatos();
+  function atualizarContatos() {
+    fetch('/admin/api/contatos', { cache: 'no-store' })
+      .then(r => r.ok ? r.json() : Promise.reject('Erro ao buscar contatos'))
+      .then(dados => {
+        const tbody = document.getElementById('contatos-body');
+        const dataScript = document.getElementById('mensagens-contato-data');
+        if (!tbody || !dataScript) {
+          console.warn('⚠️ [contatos] elementos ainda não disponíveis, abortando atualização.');
+          return;
+        }
+
+        if (!dados.length) {
+          tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:12px;">Nenhuma mensagem encontrada.</td></tr>';
+          dataScript.textContent = '{}';
+          mensagensContatoData = {};
+          return;
+        }
+
+        // atualiza cache de mensagens completas
+        const novas = {};
+        dados.forEach(c => { novas[c.id] = c.mensagem || ''; });
+        dataScript.textContent = JSON.stringify(novas);
+        mensagensContatoData = novas;
+
+        // re-render do tbody (sem onclick inline)
+        tbody.innerHTML = dados.map((c, i) => {
+          const curta = (c.mensagem || '').substring(0, 100);
+          const longa = (c.mensagem || '').length > 100;
+          return `
+            <tr>
+              <td style="padding:8px; border:1px solid #ddd;">${i + 1}</td>
+              <td style="padding:8px; border:1px solid #ddd;">${c.nome || ''}</td>
+              <td style="padding:8px; border:1px solid #ddd;">${c.email || ''}</td>
+              <td style="padding:8px; border:1px solid #ddd;">${c.assunto || ''}</td>
+              <td style="padding:8px; border:1px solid #ddd; max-width:300px;">
+                <div class="mensagem-truncada-contato" data-msg-id="${c.id}" data-expanded="0">
+                  <span class="texto-msg">${curta}</span>
+                  ${longa ? `<span class="reticencias">...</span>
+                    <button class="btn-ver-mais-contato" data-id="${c.id}" style="background:none; border:none; cursor:pointer; text-decoration:underline; padding:0; margin-left:4px;">Ver mais</button>` : ``}
+                </div>
+              </td>
+              <td style="padding:8px; border:1px solid #ddd; white-space:nowrap;">${new Date(c.data_envio).toLocaleString('pt-BR')}</td>
+              <td style="padding:8px; border:1px solid #ddd; text-align:center;">
+                <button class="btn-excluir-contato" data-id="${c.id}" style="background:#dc3545; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer;">🗑️</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      })
+      .catch(err => console.error('❌ [contatos] erro ao atualizar:', err));
+  }
+
+  // Atualização periódica
+  setInterval(atualizarContatos, 10000);
+})();
 </script>
+
+<style>
+  @media (max-width: 768px) {
+    table { font-size: 12px; }
+    th, td { padding: 6px 4px !important; }
+    .mensagem-truncada-contato { max-width: 150px; word-wrap: break-word; }
+  }
+  .mensagem-truncada-contato { word-wrap: break-word; overflow-wrap: break-word; line-height: 1.4; }
+  table { table-layout: auto; }
+</style>

@@ -5,79 +5,195 @@
   <p style="color:var(--muted)">Aqui você pode visualizar os pedidos de músicas enviados pelos usuários.</p>
 </div>
 
-<table id="pedidos-table" style="width:100%; border-collapse:collapse; max-width:960px; margin:auto;">
-  <thead>
-    <tr style="background:#f5f5f5;">
-      <th style="padding:8px; border:1px solid #ddd;">#</th>
-      <th style="padding:8px; border:1px solid #ddd;">Usuário</th>
-      <th style="padding:8px; border:1px solid #ddd;">E-mail</th>
-      <th style="padding:8px; border:1px solid #ddd;">Assunto</th>
-      <th style="padding:8px; border:1px solid #ddd;">Mensagem</th>
-      <th style="padding:8px; border:1px solid #ddd;">Data</th>
-    </tr>
-  </thead>
-  <tbody id="pedidos-body">
-    <% if (pedidos && pedidos.length) { %>
-      <% pedidos.forEach((c, i) => { %>
-        <tr>
-          <td><%= i + 1 %></td>
-          <td><%= c.nome %></td>
-          <td><%= c.email %></td>
-          <td><%= c.assunto %></td>
-          <td style="max-width:300px; white-space:pre-wrap;"><%= c.mensagem %></td>
-          <td><%= new Date(c.data_envio).toLocaleString('pt-BR') %></td>
-        </tr>
-      <% }) %>
-    <% } else { %>
-      <tr><td colspan="6" style="text-align:center; padding:12px;">Nenhum pedido encontrado.</td></tr>
-    <% } %>
-  </tbody>
-</table>
+<!-- Dados das mensagens completas -->
+<script id="mensagens-pedidos-data" type="application/json">
+<%- JSON.stringify(pedidos.reduce((acc, c) => { acc[c.id] = c.mensagem; return acc; }, {})) %>
+</script>
+
+<div style="max-width:1200px; margin:auto; overflow-x:auto;">
+  <table id="pedidos-table" style="width:100%; border-collapse:collapse;">
+    <thead>
+      <tr style="background:#f5f5f5;">
+        <th style="padding:12px 8px; border:1px solid #ddd;">#</th>
+        <th style="padding:12px 8px; border:1px solid #ddd;">Usuário</th>
+        <th style="padding:12px 8px; border:1px solid #ddd;">E-mail</th>
+        <th style="padding:12px 8px; border:1px solid #ddd;">Assunto</th>
+        <th style="padding:12px 8px; border:1px solid #ddd; min-width:200px;">Mensagem</th>
+        <th style="padding:12px 8px; border:1px solid #ddd;">Data</th>
+        <th style="padding:12px 8px; border:1px solid #ddd; text-align:center;">Ações</th>
+      </tr>
+    </thead>
+    <tbody id="pedidos-body">
+      <% if (pedidos && pedidos.length) { %>
+        <% pedidos.forEach((c, i) => { %>
+          <tr>
+            <td style="padding:8px; border:1px solid #ddd;"><%= i + 1 %></td>
+            <td style="padding:8px; border:1px solid #ddd;"><%= c.nome %></td>
+            <td style="padding:8px; border:1px solid #ddd;"><%= c.email %></td>
+            <td style="padding:8px; border:1px solid #ddd;"><%= c.assunto %></td>
+            <td style="padding:8px; border:1px solid #ddd; max-width:300px;">
+              <div class="mensagem-truncada-pedido" data-msg-id="<%= c.id %>">
+                <span class="texto-msg"><%= c.mensagem.length > 100 ? c.mensagem.substring(0, 100) : c.mensagem %></span>
+                <% if (c.mensagem.length > 100) { %>
+                  <span class="reticencias">...</span>
+                  <button class="btn-ver-mais-pedido" data-id="<%= c.id %>" style="background:none; border:none; cursor:pointer; text-decoration:underline; padding:0; margin-left:4px;">Ver mais</button>
+                <% } %>
+              </div>
+            </td>
+            <td style="padding:8px; border:1px solid #ddd; white-space:nowrap;"><%= new Date(c.data_envio).toLocaleString('pt-BR') %></td>
+            <td style="padding:8px; border:1px solid #ddd; text-align:center;">
+              <!-- sem onclick inline -->
+              <button class="btn-excluir-pedido" data-id="<%= c.id %>" style="background:#dc3545; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer;">🗑️</button>
+            </td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr><td colspan="7" style="text-align:center; padding:12px; border:1px solid #ddd;">Nenhum pedido encontrado.</td></tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
 
 <div style="text-align:center; margin-top:30px;">
   <a href="/admin/" style="color:var(--primary); font-weight:600; text-decoration:none;">← Voltar ao painel</a>
 </div>
 
 <script>
-async function atualizarPedidos() {
-  try {
-    const res = await fetch('/admin/api/pedidos');
-    if (!res.ok) throw new Error('Erro ao buscar pedidos');
-    const dados = await res.json();
-    const tbody = document.getElementById('pedidos-body');
+// Executa imediatamente (sem depender de DOMContentLoaded)
+(function () {
+  console.log('🚀 [pedidos] script iniciado');
 
-    if (!dados.length) {
-      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:12px;">Nenhum pedido encontrado.</td></tr>';
+  let mensagensPedidosData = {};
+  const dataEl = document.getElementById('mensagens-pedidos-data');
+  try {
+    mensagensPedidosData = dataEl ? JSON.parse(dataEl.textContent || '{}') : {};
+    console.log('✅ [pedidos] mensagens carregadas:', Object.keys(mensagensPedidosData).length);
+  } catch (e) {
+    console.error('❌ [pedidos] erro ao parsear mensagens:', e);
+    mensagensPedidosData = {};
+  }
+
+  function toggleMensagemPedido(id) {
+    const container = document.querySelector('[data-msg-id="' + id + '"]');
+    if (!container) return;
+    const texto = container.querySelector('.texto-msg');
+    const ret = container.querySelector('.reticencias');
+    const btn = container.querySelector('.btn-ver-mais-pedido');
+    const full = mensagensPedidosData[id] || '';
+    const expanded = container.dataset.expanded === '1';
+
+    if (expanded) {
+      texto.textContent = full.substring(0, 100);
+      if (ret) ret.style.display = 'inline';
+      if (btn) btn.textContent = 'Ver mais';
+      container.dataset.expanded = '0';
+    } else {
+      texto.textContent = full;
+      if (ret) ret.style.display = 'none';
+      if (btn) btn.textContent = 'Ver menos';
+      container.dataset.expanded = '1';
+    }
+  }
+
+  // Exposição opcional no window
+  window.excluirPedido = function (id) {
+    console.log('🗑️ [pedidos] excluir ID:', id);
+    if (!confirm('Tem certeza que deseja excluir este pedido?')) return;
+
+    fetch('/admin/pedidos/excluir/' + id, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    })
+    .then(res => res.ok ? res.json() : Promise.reject('Erro HTTP ' + res.status))
+    .then(() => {
+      alert('Pedido excluído com sucesso!');
+      atualizarPedidos();
+    })
+    .catch(err => {
+      console.error('💥 [pedidos] erro ao excluir:', err);
+      alert('Erro ao excluir pedido.');
+    });
+  };
+
+  // Delegação de eventos (funciona após SPA e atualizações do tbody)
+  document.addEventListener('click', (e) => {
+    const verMaisBtn = e.target.closest('.btn-ver-mais-pedido');
+    if (verMaisBtn) {
+      toggleMensagemPedido(verMaisBtn.dataset.id);
       return;
     }
 
-    tbody.innerHTML = dados.map((c, i) => `
-      <tr>
-        <td>${i + 1}</td>
-        <td>${c.nome}</td>
-        <td>${c.email}</td>
-        <td>${c.assunto}</td>
-        <td style="max-width:300px; white-space:pre-wrap;">${c.mensagem}</td>
-        <td>${new Date(c.data_envio).toLocaleString('pt-BR')}</td>
-      </tr>
-    `).join('');
-  } catch (err) {
-    console.error('Falha ao atualizar pedidos:', err);
-  }
-}
+    const excluirBtn = e.target.closest('.btn-excluir-pedido');
+    if (excluirBtn) {
+      const id = excluirBtn.dataset.id;
+      window.excluirPedido(id);
+    }
+  });
 
-// Atualiza a cada 10 segundos
-setInterval(atualizarPedidos, 10000);
-atualizarPedidos();
+  function atualizarPedidos() {
+    fetch('/admin/api/pedidos', { cache: 'no-store' })
+      .then(r => r.ok ? r.json() : Promise.reject('Erro ao buscar pedidos'))
+      .then(dados => {
+        const tbody = document.getElementById('pedidos-body');
+        const dataScript = document.getElementById('mensagens-pedidos-data');
+        if (!tbody || !dataScript) {
+          console.warn('⚠️ [pedidos] elementos ainda não disponíveis, abortando atualização.');
+          return;
+        }
+
+        if (!dados.length) {
+          tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:12px;">Nenhum pedido encontrado.</td></tr>';
+          dataScript.textContent = '{}';
+          mensagensPedidosData = {};
+          return;
+        }
+
+        // atualiza cache de mensagens completas
+        const novas = {};
+        dados.forEach(c => { novas[c.id] = c.mensagem || ''; });
+        dataScript.textContent = JSON.stringify(novas);
+        mensagensPedidosData = novas;
+
+        // re-render do tbody (sem onclick inline)
+        tbody.innerHTML = dados.map((c, i) => {
+          const curta = (c.mensagem || '').substring(0, 100);
+          const longa = (c.mensagem || '').length > 100;
+          return `
+            <tr>
+              <td style="padding:8px; border:1px solid #ddd;">${i + 1}</td>
+              <td style="padding:8px; border:1px solid #ddd;">${c.nome || ''}</td>
+              <td style="padding:8px; border:1px solid #ddd;">${c.email || ''}</td>
+              <td style="padding:8px; border:1px solid #ddd;">${c.assunto || ''}</td>
+              <td style="padding:8px; border:1px solid #ddd; max-width:300px;">
+                <div class="mensagem-truncada-pedido" data-msg-id="${c.id}" data-expanded="0">
+                  <span class="texto-msg">${curta}</span>
+                  ${longa ? `<span class="reticencias">...</span>
+                    <button class="btn-ver-mais-pedido" data-id="${c.id}" style="background:none; border:none; cursor:pointer; text-decoration:underline; padding:0; margin-left:4px;">Ver mais</button>` : ``}
+                </div>
+              </td>
+              <td style="padding:8px; border:1px solid #ddd; white-space:nowrap;">${new Date(c.data_envio).toLocaleString('pt-BR')}</td>
+              <td style="padding:8px; border:1px solid #ddd; text-align:center;">
+                <button class="btn-excluir-pedido" data-id="${c.id}" style="background:#dc3545; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer;">🗑️</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      })
+      .catch(err => console.error('❌ [pedidos] erro ao atualizar:', err));
+  }
+
+  // Atualização periódica
+  setInterval(atualizarPedidos, 10000);
+})();
 </script>
 
 <style>
   @media (max-width: 768px) {
-    table {
-      font-size: 14px;
-    }
-    th, td {
-      padding: 6px;
-    }
+    table { font-size: 12px; }
+    th, td { padding: 6px 4px !important; }
+    .mensagem-truncada-pedido { max-width: 150px; word-wrap: break-word; }
   }
+
+  .mensagem-truncada-pedido { word-wrap: break-word; overflow-wrap: break-word; line-height: 1.4; }
+  table { table-layout: auto; }
 </style>

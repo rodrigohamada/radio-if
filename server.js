@@ -52,7 +52,7 @@ app.use(session({
 // ============================================================
 app.use((req, res, next) => {
   res.locals.user = req.session.user || null;
-  res.locals.isAdmin = Boolean(req.session.user?.administrador); // 👈 corrigido
+  res.locals.isAdmin = Boolean(req.session.user?.administrador); // 
   res.locals.STREAM_URL = process.env.STREAM_URL || '';
   res.locals.appTitle = 'Rádio IF';
   next();
