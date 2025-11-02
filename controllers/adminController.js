@@ -384,6 +384,24 @@ exports.makeAdmin = async (req, res) => {
 };
 
 // =======================================
+// Remover privilégio de administrador
+// =======================================
+exports.removeAdmin = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await db.query('UPDATE usuarios SET administrador = 0 WHERE id = ?', [id]);
+    res.redirect('/admin/equipe');
+  } catch (err) {
+    console.error('[AdminController] Erro ao remover privilégio de administrador:', err);
+    res.status(500).render('error', {
+      title: 'Erro ao atualizar usuário',
+      message: 'Falha ao remover privilégio de administrador.',
+      error: err
+    });
+  }
+};
+
+// =======================================
 // Excluir usuário
 // =======================================
 exports.deleteUser = async (req, res) => {

@@ -30,7 +30,6 @@ exports.login = async (req, res) => {
       });
     }
 
-    // Cria sessão do usuário autenticado
     req.session.user = {
       id: user.id,
       nome: user.nome,
@@ -38,9 +37,6 @@ exports.login = async (req, res) => {
       administrador: !!user.administrador
     };
 
-    // Redirecionamento inteligente:
-    // - Admins vão direto ao painel principal
-    // - Usuários comuns seguem o fluxo normal
     if (req.session.user.administrador) {
       return res.redirect('/admin/');
     }
@@ -69,6 +65,8 @@ exports.registerForm = (req, res) => {
 // Criação de novo usuário
 // =======================================
 exports.register = async (req, res) => {
+  console.log('📝 Dados recebidos no cadastro:', req.body);
+
   const {
     name,
     email,
@@ -83,29 +81,50 @@ exports.register = async (req, res) => {
     uf
   } = req.body;
 
-  // 🔒 Validação dos campos obrigatórios
+  // Validação dos campos obrigatórios
   if (!name || !email || !password || !celular || !cep || !logradouro || !numero || !bairro || !cidade || !uf) {
+    console.log('❌ Campos obrigatórios faltando');
     return res.status(400).render('cadastro', {
       title: 'Cadastro - Rádio IF',
       error: 'Preencha todos os campos obrigatórios.'
     });
   }
 
+  // Validação de formato de email
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).render('cadastro', {
+      title: 'Cadastro - Rádio IF',
+      error: 'E-mail inválido.'
+    });
+  }
+
+  // Validação de senha (mínimo 6 caracteres)
+  if (password.length < 6) {
+    return res.status(400).render('cadastro', {
+      title: 'Cadastro - Rádio IF',
+      error: 'A senha deve ter no mínimo 6 caracteres.'
+    });
+  }
+
   try {
+    // Verifica se o e-mail já está cadastrado
     const existing = await User.findByEmail(email);
     if (existing) {
+      console.log('⚠️ E-mail já cadastrado:', email);
       return res.status(400).render('cadastro', {
         title: 'Cadastro - Rádio IF',
         error: 'E-mail já cadastrado.'
       });
     }
 
+    console.log('✅ Criando novo usuário...');
     const id = await User.create({
       nome: name,
       email,
       senha: password,
       celular,
-      telefone,
+      telefone: telefone || null,
       cep,
       logradouro,
       numero,
@@ -114,15 +133,25 @@ exports.register = async (req, res) => {
       uf
     });
 
+    console.log('✅ Usuário criado com ID:', id);
+
     // Cria sessão após cadastro bem-sucedido
-    req.session.user = { id, nome: name, email, administrador: false };
+    req.session.user = {
+      id,
+      nome: name,
+      email,
+      administrador: false
+    };
+
+    console.log('✅ Sessão criada, redirecionando...');
     return res.redirect('/');
 
   } catch (err) {
-    console.error('[AuthController] Erro ao cadastrar usuário:', err);
+    console.error('[AuthController] ❌ Erro ao cadastrar usuário:', err);
+    console.error('Stack trace:', err.stack);
     return res.status(500).render('cadastro', {
       title: 'Cadastro - Rádio IF',
-      error: 'Erro ao cadastrar. Tente novamente.'
+      error: 'Erro ao cadastrar. Verifique os dados e tente novamente. Detalhes: ' + err.message
     });
   }
 };

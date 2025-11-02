@@ -68,6 +68,9 @@ router.get('/equipe/excluir/:id', adminOnly, adminController.deleteMember);
 // Tornar usuário administrador
 router.get('/usuarios/admin/:id', adminOnly, adminController.makeAdmin);
 
+// Remover privilégios de administrador
+router.get('/usuarios/remover-admin/:id', adminOnly, adminController.removeAdmin);
+
 // Excluir usuário
 router.get('/usuarios/excluir/:id', adminOnly, adminController.deleteUser);
 

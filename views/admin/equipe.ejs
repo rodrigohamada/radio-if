@@ -37,7 +37,9 @@
               </td>
               <td>
                 <a href="/admin/equipe/editar/<%= m.id %>" class="btn-sm">✏️ Editar</a>
-                <a href="/admin/equipe/excluir/<%= m.id %>" class="btn-sm btn-danger" onclick="return confirm('Excluir integrante <%= m.nome %>?');">🗑️ Excluir</a>
+                <a href="/admin/equipe/excluir/<%= m.id %>" 
+                   class="btn-sm btn-danger" 
+                   onclick="return confirm('Excluir integrante <%= m.nome %>?');">🗑️ Excluir</a>
               </td>
             </tr>
           <% }) %>
@@ -84,8 +86,19 @@
               <td>
                 <% if (!u.administrador) { %>
                   <a href="/admin/usuarios/admin/<%= u.id %>" class="btn-sm">⭐ Tornar Adm</a>
+                <% } else { %>
+                  <a href="/admin/usuarios/remover-admin/<%= u.id %>" 
+                     class="btn-sm btn-warning" 
+                     style="background:#ffc107; color:black;">
+                     ⚙️ Remover Adm
+                  </a>
                 <% } %>
-                <a href="/admin/usuarios/excluir/<%= u.id %>" class="btn-sm btn-danger" onclick="return confirm('Excluir usuário <%= u.nome %>?');">🗑️ Excluir</a>
+
+                <a href="/admin/usuarios/excluir/<%= u.id %>" 
+                   class="btn-sm btn-danger" 
+                   onclick="return confirm('Excluir usuário <%= u.nome %>?');">
+                   🗑️ Excluir
+                </a>
               </td>
             </tr>
           <% }) %>
@@ -100,4 +113,3 @@
 <div style="text-align:center; margin-top:30px;">
   <a href="/admin" style="color:var(--primary); font-weight:600; text-decoration:none;">← Voltar ao painel</a>
 </div>
-

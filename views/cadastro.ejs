@@ -165,55 +165,107 @@
 </div>
 
 <script>
-  // API dos Correios (ViaCEP)
-  document.getElementById('cep').addEventListener('blur', async () => {
-    const cep = document.getElementById('cep').value.replace(/\D/g, '');
-    if (cep.length !== 8) return;
+  console.log('🚀 Script de cadastro carregado');
 
-    try {
-      const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-      const data = await res.json();
-      if (data.erro) {
-        alert('CEP não encontrado.');
-        return;
-      }
-      document.getElementById('logradouro').value = data.logradouro || '';
-      document.getElementById('bairro').value = data.bairro || '';
-      document.getElementById('cidade').value = data.localidade || '';
-      document.getElementById('uf').value = data.uf || '';
-    } catch (err) {
-      alert('Erro ao consultar o CEP. Tente novamente.');
-      console.error(err);
+  // API dos Correios (ViaCEP)
+  var cepInput = document.getElementById('cep');
+
+  cepInput.addEventListener('input', function (e) {
+    var value = e.target.value.replace(/\D/g, '');
+
+    if (value.length > 5) {
+      value = value.slice(0, 5) + '-' + value.slice(5, 8);
     }
+
+    e.target.value = value;
+  });
+
+  cepInput.addEventListener('blur', function () {
+    var cep = cepInput.value.replace(/\D/g, '');
+
+    console.log('🔍 Buscando CEP:', cep);
+
+    if (cep.length !== 8) {
+      console.log('⚠️ CEP inválido (deve ter 8 dígitos)');
+      return;
+    }
+
+    console.log('📡 Consultando ViaCEP...');
+
+    fetch('https://viacep.com.br/ws/' + cep + '/json/')
+      .then(function (res) {
+        if (!res.ok) {
+          throw new Error('Erro na requisição: ' + res.status);
+        }
+        return res.json();
+      })
+      .then(function (data) {
+        console.log('📦 Dados recebidos:', data);
+
+        if (data.erro) {
+          alert('CEP não encontrado.');
+          console.log('❌ CEP não encontrado');
+          return;
+        }
+
+        document.getElementById('logradouro').value = data.logradouro || '';
+        document.getElementById('bairro').value = data.bairro || '';
+        document.getElementById('cidade').value = data.localidade || '';
+        document.getElementById('uf').value = data.uf || '';
+
+        console.log('✅ Campos preenchidos com sucesso');
+
+        document.getElementById('numero').focus();
+      })
+      .catch(function (err) {
+        console.error('💥 Erro ao consultar CEP:', err);
+        alert('Erro ao consultar o CEP. Verifique sua conexão e tente novamente.');
+      });
   });
 
   // Mostrar/ocultar senha
-  const togglePassword = document.getElementById('togglePassword');
-  const passwordInput = document.getElementById('password');
-  togglePassword.addEventListener('click', () => {
-    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-    passwordInput.setAttribute('type', type);
-    togglePassword.textContent = type === 'password' ? '👁️' : '🙈';
-  });
+  var togglePassword = document.getElementById('togglePassword');
+  var passwordInput = document.getElementById('password');
+
+  if (togglePassword) {
+    togglePassword.addEventListener('click', function () {
+      var type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      togglePassword.textContent = type === 'password' ? '👁️' : '🙈';
+      console.log('👁️ Visibilidade da senha alterada');
+    });
+  }
 
   // Validação de e-mail
-  const emailInput = document.getElementById('email');
-  const emailError = document.getElementById('emailError');
-  emailInput.addEventListener('blur', () => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    emailError.style.display = emailRegex.test(emailInput.value) ? 'none' : 'block';
+  var emailInput = document.getElementById('email');
+  var emailError = document.getElementById('emailError');
+
+  emailInput.addEventListener('blur', function () {
+    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    var isValid = emailRegex.test(emailInput.value);
+    emailError.style.display = isValid ? 'none' : 'block';
+
+    if (!isValid) {
+      console.log('⚠️ E-mail inválido');
+    }
   });
 
   // Validação de confirmação de senha
-  const confirmPassword = document.getElementById('confirmPassword');
-  const passwordError = document.getElementById('passwordError');
-  const form = document.getElementById('registerForm');
+  var confirmPassword = document.getElementById('confirmPassword');
+  var passwordError = document.getElementById('passwordError');
+  var form = document.getElementById('registerForm');
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', function (e) {
+    console.log('📝 Formulário sendo enviado...');
+
+    var hasError = false;
+
     if (passwordInput.value !== confirmPassword.value) {
       e.preventDefault();
       passwordError.style.display = 'block';
       confirmPassword.focus();
+      hasError = true;
+      console.log('❌ As senhas não coincidem');
     } else {
       passwordError.style.display = 'none';
     }
@@ -221,6 +273,69 @@
     if (emailError.style.display === 'block') {
       e.preventDefault();
       emailInput.focus();
+      hasError = true;
+      console.log('❌ E-mail inválido');
+    }
+
+    if (passwordInput.value.length < 6) {
+      e.preventDefault();
+      alert('A senha deve ter no mínimo 6 caracteres');
+      passwordInput.focus();
+      hasError = true;
+      console.log('❌ Senha muito curta');
+    }
+
+    if (!hasError) {
+      // 🔹 REMOVE MÁSCARAS ANTES DE ENVIAR
+      cepInput.value = cepInput.value.replace(/\D/g, '');
+      celularInput.value = celularInput.value.replace(/\D/g, '');
+      if (telefoneInput.value) {
+        telefoneInput.value = telefoneInput.value.replace(/\D/g, '');
+      }
+
+      console.log('✅ Validações OK, máscaras removidas');
+      console.log('CEP limpo:', cepInput.value);
+      console.log('Celular limpo:', celularInput.value);
+      console.log('Telefone limpo:', telefoneInput.value);
+      console.log('Enviando formulário...');
     }
   });
+
+  // Máscaras para telefones
+  var celularInput = document.getElementById('celular');
+  var telefoneInput = document.getElementById('telefone');
+
+  celularInput.addEventListener('input', function (e) {
+    var value = e.target.value.replace(/\D/g, '');
+
+    if (value.length > 0) {
+      value = '(' + value;
+    }
+    if (value.length > 3) {
+      value = value.slice(0, 3) + ') ' + value.slice(3);
+    }
+    if (value.length > 10) {
+      value = value.slice(0, 10) + '-' + value.slice(10, 14);
+    }
+
+    e.target.value = value;
+  });
+
+  telefoneInput.addEventListener('input', function (e) {
+    var value = e.target.value.replace(/\D/g, '');
+
+    if (value.length > 0) {
+      value = '(' + value;
+    }
+    if (value.length > 3) {
+      value = value.slice(0, 3) + ') ' + value.slice(3);
+    }
+    if (value.length > 9) {
+      value = value.slice(0, 9) + '-' + value.slice(9, 13);
+    }
+
+    e.target.value = value;
+  });
+
+  console.log('✅ Todas as validações e máscaras configuradas');
 </script>
