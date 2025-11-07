@@ -37,8 +37,8 @@
 
   function attachAudioEvents(a) {
     if (a._eventsAttached) return;
-    a.addEventListener('playing', () => console.log('🎧 Tocando!'));
-    a.addEventListener('pause',   () => console.log('⏸️ Pausado.'));
+    a.addEventListener('playing', () => console.log('Play'));
+    a.addEventListener('pause',   () => console.log('Pause'));
     a.addEventListener('error',   e => console.error('[player] Erro de áudio:', e));
     a._eventsAttached = true;
   }
@@ -75,7 +75,7 @@
           console.log('[player] play iniciado com sucesso');
         }).catch(err => {
           console.error('Erro no play():', err);
-          alert('Não foi possível iniciar o áudio. Interaja com a página e tente novamente.');
+          alert('Player indisponível no momento.');
         });
       }
     } else {
@@ -86,6 +86,8 @@
       window.globalIsPlaying = false;
     }
   });
+
+
 
   // Volume
   elVol.addEventListener('input', () => {
