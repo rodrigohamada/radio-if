@@ -395,21 +395,28 @@ main.page {
 /* ==========================================================
    BOTÕES
    ========================================================== */
+
+/* Botão padrão */
 .btn {
   background: var(--primary);
   color: #fff;
   text-decoration: none;
-  padding: 8px 16px;
+  padding: clamp(6px, 1.5vw, 8px) clamp(12px, 2vw, 16px);
   border-radius: 6px;
   font-weight: 600;
-  transition: background .2s;
-  display: inline-block;
+  font-size: clamp(14px, 1.4vw, 16px);
+  transition: background .2s ease, transform .2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: none;
   cursor: pointer;
+  white-space: nowrap; /* evita quebra estranha em telas pequenas */
 }
 
 .btn:hover {
   background: var(--primary-700);
+  transform: scale(1.03); /* leve lift responsivo, opcional e suave */
 }
 
 /* Botões especiais para home */
@@ -424,22 +431,27 @@ body.home-page .btn:hover {
   box-shadow: 0 0 20px rgba(47, 158, 65, 0.8);
 }
 
+/* Botão pequeno */
 .btn-sm {
   background: var(--primary);
   color: #fff;
-  padding: 4px 10px;
+  padding: clamp(3px, 1vw, 4px) clamp(8px, 1.6vw, 10px);
   border-radius: 4px;
-  font-size: 14px;
+  font-size: clamp(12px, 1.4vw, 14px);
   text-decoration: none;
   margin: 0 4px;
-  display: inline-block;
-  transition: background .2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .2s ease;
+  white-space: nowrap;
 }
 
 .btn-sm:hover {
   background: var(--primary-700);
 }
 
+/* Botão de perigo */
 .btn-danger {
   background: #e74c3c;
   color: #fff;
@@ -448,6 +460,22 @@ body.home-page .btn:hover {
 .btn-danger:hover {
   background: #c0392b;
 }
+
+/* ==========================================================
+   RESPONSIVIDADE
+   ========================================================== */
+
+/* Ajustes extras em telas muito pequenas */
+@media (max-width: 420px) {
+  .btn {
+    padding: 6px 12px;
+  }
+
+  .btn-sm {
+    margin: 2px 0;
+  }
+}
+
 
 /* ==========================================================
    🎛️ SLIDER - estilo neon dinâmico
