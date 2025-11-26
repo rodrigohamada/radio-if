@@ -22,7 +22,7 @@ body {
 }
 
 /* ==========================================================
-   BODY E CONTAINERS GERAIS – ORIGINAL PRESERVADO
+   BODY E CONTAINERS GERAIS
    ========================================================== */
 body {
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, 'Noto Sans';
@@ -33,6 +33,7 @@ body {
   flex-direction: column;
 }
 
+/* Garante a mesma fonte para todas as páginas, inclusive Notícias e Programação */
 body,
 h1,
 h2,
@@ -52,9 +53,7 @@ textarea {
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, 'Noto Sans' !important;
 }
 
-/* ==========================================================
-   HOME COM FUNDO NEON — SEM ALTERAÇÕES
-   ========================================================== */
+/* Apenas a HOME terá fundo escuro com efeitos neon */
 body.home-page {
   background: linear-gradient(180deg, #050505 0%, #0a0a0a 25%, #111 60%, #0b0b0b 100%);
   color: #e8e8e8;
@@ -62,6 +61,7 @@ body.home-page {
   overflow-x: hidden;
 }
 
+/* Camada extra com movimento de luz suave - APENAS HOME */
 body.home-page::before {
   content: "";
   position: fixed;
@@ -84,12 +84,14 @@ body.home-page::before {
     opacity: 0.9;
     transform: scale(1);
   }
+
   100% {
     opacity: 1;
     transform: scale(1.05);
   }
 }
 
+/* Luz em movimento para dar sensação de profundidade - APENAS HOME */
 body.home-page::after {
   content: "";
   position: fixed;
@@ -110,6 +112,7 @@ body.home-page::after {
   0% {
     transform: translateX(-10%);
   }
+
   100% {
     transform: translateX(10%);
   }
@@ -120,26 +123,13 @@ main.page {
   padding-bottom: 96px;
 }
 
-/* ==========================================================
-   CONTAINERS — MELHORIA DE RESPONSIVIDADE
-   ========================================================== */
-
 .container {
   max-width: 1180px;
   margin: 0 auto;
   padding: 0 16px;
 }
 
-/* Mantém design, apenas adiciona mais respiro em telas muito pequenas */
-@media (max-width: 480px) {
-  .container {
-    padding: 0 20px;
-  }
-}
-
-/* ==========================================================
-   FULL BLEED — GALERIA DA HOME
-   ========================================================== */
+/* Utilitário para seções full-bleed (usado na galeria da home) */
 .full-bleed {
   width: 100%;
   background: transparent;
@@ -151,59 +141,9 @@ main.page {
   padding: 0 16px;
 }
 
-/* Galeria — ajuste suave para evitar corte lateral em telas menores */
-@media (max-width: 480px) {
-  .full-bleed .gallery-wrap {
-    padding: 0 12px;
-  }
-}
-
-/* ==========================================================
-   AJUSTES GERAIS DE RESPONSIVIDADE GLOBAIS
-   ========================================================== */
-
-/* Melhora legibilidade em telas menores */
-@media (max-width: 480px) {
-  body {
-    font-size: 0.94rem;
-  }
-}
-
-/* Evita que headers fiquem esmagados */
-@media (max-width: 480px) {
-  h1, h2, h3 {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-  }
-}
-
-/* Ajusta margens básicas de seções (sem mexer no visual original) */
-@media (max-width: 480px) {
-  section,
-  .section,
-  .block {
-    padding-left: 8px;
-    padding-right: 8px;
-  }
-}
-
-/* Remove qualquer sobra lateral */
-@media (max-width: 420px) {
-  body {
-    overflow-x: hidden;
-  }
-}
-
-/* Ajuste fluido do main */
-@media (max-width: 480px) {
-  main.page {
-    padding-bottom: 72px;
-  }
-}
-
 /* ==========================================================
    CABEÇALHO COLORIDO (logo branco / menu verde)
-   ========================================================== */
+   ======================================= */
 .header {
   position: sticky;
   top: 0;
@@ -249,7 +189,7 @@ main.page {
   transform: scale(1.08);
 }
 
-/* Parte direita */
+/* Parte direita (menu) */
 .header-right {
   background: var(--primary);
   display: flex;
@@ -257,6 +197,7 @@ main.page {
   justify-content: flex-end;
   flex: 1;
   padding: 0 24px;
+  
 }
 
 /* Navegação */
@@ -266,7 +207,7 @@ main.page {
   transition: max-height .3s ease;
 }
 
-/* Links */
+/* Links do menu */
 .header-right .nav a {
   color: #fff;
   font-weight: 600;
@@ -306,19 +247,7 @@ main.page {
   transition: all .3s;
 }
 
-/* ==========================================================
-   RESPONSIVIDADE APRIMORADA (MANTENDO O DESIGN ORIGINAL)
-   ========================================================== */
-
-@media (max-width: 900px) {
-  /* Previne compressão do menu antes do mobile */
-  .nav a {
-    padding: 6px 10px;
-  }
-}
-
-@media (max-width: 768px) {
-  /* Logo menor */
+@media (max-width:768px) {
   .logo-img {
     height: 70px;
   }
@@ -330,21 +259,19 @@ main.page {
   }
 
   .header-left {
+    background: #fff;
     padding: 8px 16px;
   }
 
   .header-right {
+    background: var(--primary);
     padding: 8px 16px;
-    justify-content: flex-end;
-    gap: 16px;
   }
 
-  /* Ativa o botão mobile */
   .hamburger {
     display: flex;
   }
 
-  /* Torna o menu suspenso */
   .nav {
     position: absolute;
     top: 100%;
@@ -366,7 +293,6 @@ main.page {
     color: #fff;
     padding: 12px 20px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
-    width: 100%;
   }
 
   .nav a:hover {
@@ -374,49 +300,24 @@ main.page {
   }
 }
 
-/* Ajuste extra — remove qualquer scroll lateral causado pelo menu */
-@media (max-width: 768px) {
-  .header {
-    overflow-x: hidden;
-  }
-}
-
-/* Melhora toque em telas muito pequenas */
-@media (max-width: 480px) {
-  .nav a {
-    padding: 14px 24px;
-  }
-  .logo-img {
-    height: 60px;
-  }
-}
-
-
 /* ==========================================================
    BOTÕES
    ========================================================== */
-
-/* Botão padrão */
 .btn {
   background: var(--primary);
   color: #fff;
   text-decoration: none;
-  padding: clamp(6px, 1.5vw, 8px) clamp(12px, 2vw, 16px);
+  padding: 8px 16px;
   border-radius: 6px;
   font-weight: 600;
-  font-size: clamp(14px, 1.4vw, 16px);
-  transition: background .2s ease, transform .2s ease;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  transition: background .2s;
+  display: inline-block;
   border: none;
   cursor: pointer;
-  white-space: nowrap; /* evita quebra estranha em telas pequenas */
 }
 
 .btn:hover {
   background: var(--primary-700);
-  transform: scale(1.03); /* leve lift responsivo, opcional e suave */
 }
 
 /* Botões especiais para home */
@@ -431,27 +332,22 @@ body.home-page .btn:hover {
   box-shadow: 0 0 20px rgba(47, 158, 65, 0.8);
 }
 
-/* Botão pequeno */
 .btn-sm {
   background: var(--primary);
   color: #fff;
-  padding: clamp(3px, 1vw, 4px) clamp(8px, 1.6vw, 10px);
+  padding: 4px 10px;
   border-radius: 4px;
-  font-size: clamp(12px, 1.4vw, 14px);
+  font-size: 14px;
   text-decoration: none;
   margin: 0 4px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: background .2s ease;
-  white-space: nowrap;
+  display: inline-block;
+  transition: background .2s;
 }
 
 .btn-sm:hover {
   background: var(--primary-700);
 }
 
-/* Botão de perigo */
 .btn-danger {
   background: #e74c3c;
   color: #fff;
@@ -460,22 +356,6 @@ body.home-page .btn:hover {
 .btn-danger:hover {
   background: #c0392b;
 }
-
-/* ==========================================================
-   RESPONSIVIDADE
-   ========================================================== */
-
-/* Ajustes extras em telas muito pequenas */
-@media (max-width: 420px) {
-  .btn {
-    padding: 6px 12px;
-  }
-
-  .btn-sm {
-    margin: 2px 0;
-  }
-}
-
 
 /* ==========================================================
    🎛️ SLIDER - estilo neon dinâmico
