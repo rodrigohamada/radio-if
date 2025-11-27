@@ -1,9 +1,8 @@
-<div class="player"
-     data-stream-urls='[
-       "http://s2.myradiostream.com:9020/;",
-       "http://s2.myradiostream.com:9020/;stream.mp3",
-       "http://s2.myradiostream.com:9020/stream"
-     ]'>
+<div class="player" id="radio-player" data-stream-urls='<%- JSON.stringify([
+    "http://s6.myradiostream.com:50486/;stream.mp3",
+    "http://s6.myradiostream.com:50486/;",
+    "http://s6.myradiostream.com:50486/stream"
+  ]) %>'>
   <div class="player-container">
     <div class="player-info">
       <h3 class="player-title">Rádio IF</h3>
