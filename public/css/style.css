@@ -1866,3 +1866,88 @@ body.home-page::-webkit-scrollbar-thumb {
 body.home-page::-webkit-scrollbar-track {
   background: #0a0a0a;
 }
+
+/* ======================================================
+   EDITAR NOTÍCIA – FORM STYLE
+   ====================================================== */
+
+.page-title {
+  text-align: center;
+  margin-bottom: 24px;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--primary);
+  
+}
+
+.form-card {
+  max-width: 650px;
+  margin: auto;
+  background: #fff;
+  padding: 28px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #444;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 15px;
+}
+
+.form-input:focus {
+  border-color: var(--primary);
+  outline: none;
+  box-shadow: 0 0 4px rgba(0,0,0,0.1);
+}
+
+.form-error {
+  margin-bottom: 16px;
+  color: #d9534f;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Botão primário padrão */
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 100%;
+  transition: 0.2s ease-in-out;
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+/* Link voltar */
+.back-link {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.back-link a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.back-link a:hover {
+  text-decoration: underline;
+}
